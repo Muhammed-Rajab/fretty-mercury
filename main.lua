@@ -28,5 +28,8 @@ local c_major_scale = {
 	{ name = "B", role = "7", label = "vii" },
 }
 
-fb:highlight_notes(a_minor)
-fb:render()
+-- fb:highlight_notes(a_minor)
+-- fb:render()
+
+local fmt = require("fmt")
+print(fmt.center("rajab", 8, "-") .. fmt.center("1", 10))
