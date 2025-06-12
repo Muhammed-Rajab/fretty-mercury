@@ -32,6 +32,40 @@ local tunings = {
 	standard = { "E", "B", "G", "D", "A", "E" },
 }
 
+-- Roles
+local RoleColors = {
+	-- Core intervals
+	root = Color.colorize({ fg = { 255, 255, 255 } }), -- White
+	m2 = Color.colorize({ fg = { 255, 204, 204 } }), -- Light Red
+	M2 = Color.colorize({ fg = { 255, 100, 100 } }), -- Red
+	m3 = Color.colorize({ fg = { 255, 165, 0 } }), -- Orange
+	M3 = Color.colorize({ fg = { 255, 140, 0 } }), -- Dark Orange
+	["4"] = Color.colorize({ fg = { 173, 216, 230 } }), -- Light Blue
+	["#4"] = Color.colorize({ fg = { 135, 206, 235 } }), -- Sky Blue
+	b5 = Color.colorize({ fg = { 128, 0, 128 } }), -- Purple
+	["5"] = Color.colorize({ fg = { 0, 255, 0 } }), -- Green
+	["#5"] = Color.colorize({ fg = { 0, 128, 0 } }), -- Dark Green
+	b6 = Color.colorize({ fg = { 255, 192, 203 } }), -- Pink
+	["6"] = Color.colorize({ fg = { 255, 105, 180 } }), -- Hot Pink
+	b7 = Color.colorize({ fg = { 173, 255, 47 } }), -- Green-Yellow
+	["7"] = Color.colorize({ fg = { 255, 215, 0 } }), -- Gold
+
+	-- Extensions
+	["9"] = Color.colorize({ fg = { 0, 191, 255 } }), -- Deep Sky Blue
+	["b9"] = Color.colorize({ fg = { 199, 21, 133 } }), -- Medium Violet Red
+	["#9"] = Color.colorize({ fg = { 255, 20, 147 } }), -- Deep Pink
+	["11"] = Color.colorize({ fg = { 106, 90, 205 } }), -- Slate Blue
+	["#11"] = Color.colorize({ fg = { 147, 112, 219 } }), -- Medium Purple
+	["13"] = Color.colorize({ fg = { 255, 160, 122 } }), -- Light Salmon
+
+	-- Modal / Suspended / Add / Omitted
+	add9 = Color.colorize({ fg = { 60, 179, 113 } }), -- Medium Sea Green
+	sus2 = Color.colorize({ fg = { 244, 164, 96 } }), -- Sandy Brown
+	sus4 = Color.colorize({ fg = { 218, 112, 214 } }), -- Orchid
+	no3 = Color.colorize({ fg = { 169, 169, 169 } }), -- Dark Gray
+	no5 = Color.colorize({ fg = { 112, 128, 144 } }), -- Slate Gray
+}
+
 -- Fretboard Related
 local Fretboard = {}
 
@@ -52,6 +86,7 @@ function Fretboard:new(tuning, frets)
 			obj.notes[string_index][fret] = {
 				name = note_name,
 				enabled = false,
+				role = nil,
 			}
 		end
 	end
@@ -74,6 +109,14 @@ function Fretboard:toggle(string_index, fret)
 	end
 
 	self.notes[string_index][fret].enabled = not self.notes[string_index][fret].enabled
+end
+
+function Fretboard:clear()
+	for _, string_notes in ipairs(self.notes) do
+		for fret = 0, self.frets do
+			string_notes[fret].enabled = false
+		end
+	end
 end
 
 function Fretboard:render()
