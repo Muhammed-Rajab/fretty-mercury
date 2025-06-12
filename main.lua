@@ -81,6 +81,7 @@ function Fretboard:new(tuning, frets)
 				name = note_name,
 				enabled = false,
 				role = nil,
+				label = nil,
 			}
 		end
 	end
@@ -146,6 +147,7 @@ function Fretboard:highlight_notes(notes)
 				if n_note.name == note.name then
 					note.enabled = true
 					note.role = n_note.role
+					note.label = n_note.label
 					break
 				end
 			end
@@ -157,6 +159,8 @@ function Fretboard:clear()
 	for _, string_notes in ipairs(self.notes) do
 		for fret = 0, self.frets do
 			string_notes[fret].enabled = false
+			string_notes[fret].role = nil
+			string_notes[fret].label = nil
 		end
 	end
 end
@@ -169,12 +173,12 @@ function Fretboard:render()
 		local open_note_display
 		if open_note.enabled then
 			if open_note.role and fmt.roles[open_note.role] then
-				open_note_display = fmt.roles[open_note.role](open_note.name)
+				open_note_display = fmt.roles[open_note.role](open_note.label or open_note.name)
 			else
-				open_note_display = fmt.enabled_note(open_note.name)
+				open_note_display = fmt.enabled_note(open_note.label or open_note.name)
 			end
 		else
-			open_note_display = fmt.disabled_note(open_note.name)
+			open_note_display = fmt.disabled_note(open_note.label or open_note.name)
 		end
 
 		io.write(string.format(" %-5s ", open_note_display .. " | "))
@@ -186,15 +190,15 @@ function Fretboard:render()
 			local display
 			if note.enabled then
 				if note.role and fmt.roles[note.role] then
-					display = fmt.roles[note.role](note.name)
+					display = fmt.roles[note.role](note.label or note.name)
 				else
-					display = fmt.enabled_note(note.name)
+					display = fmt.enabled_note(note.label or note.name)
 				end
 			else
-				display = fmt.disabled_note(note.name)
+				display = fmt.disabled_note(note.label or note.name)
 			end
 
-			display = #note.name == 2 and display or display .. " "
+			display = #(note.label or note.name) == 3 and display or display .. " "
 			io.write(string.format(" %-5s", display .. " | "))
 		end
 
@@ -231,14 +235,14 @@ local c_maj7 = {
 }
 
 local c_major_scale = {
-	{ name = "C", role = "root" },
-	{ name = "D", role = "M2" },
-	{ name = "E", role = "M3" },
-	{ name = "F", role = "4" },
-	{ name = "G", role = "5" },
-	{ name = "A", role = "6" },
-	{ name = "B", role = "7" },
+	{ name = "C", role = "root", label = "I" },
+	{ name = "D", role = "M2", label = "ii" },
+	{ name = "E", role = "M3", label = "iii" },
+	{ name = "F", role = "4", label = "IV" },
+	{ name = "G", role = "5", label = "V" },
+	{ name = "A", role = "6", label = "vi" },
+	{ name = "B", role = "7", label = "vii" },
 }
 
-fb:highlight_notes(c_major_scale)
+fb:highlight_notes(c_maj7)
 fb:render()
