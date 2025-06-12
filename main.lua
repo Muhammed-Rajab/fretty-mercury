@@ -23,7 +23,7 @@ local fmt = {
 
 	roles = {
 		-- Core intervals
-		root = Color.colorize({ fg = { 255, 255, 255 }, style = "bold" }), -- White
+		root = Color.colorize({ fg = { 255, 255, 255 }, bg = { 255, 0, 79 }, style = "bold" }), -- White
 		m2 = Color.colorize({ fg = { 255, 204, 204 }, style = "bold" }), -- Light Red
 		M2 = Color.colorize({ fg = { 255, 100, 100 }, style = "bold" }), -- Red
 		m3 = Color.colorize({ fg = { 255, 165, 0 }, style = "bold" }), -- Orange
