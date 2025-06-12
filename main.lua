@@ -25,45 +25,44 @@ local fmt = {
 		fg = { 224, 17, 95 },
 		style = "bold",
 	}),
+
+	roles = {
+		-- Core intervals
+		root = Color.colorize({ fg = { 255, 255, 255 }, style = "bold" }), -- White
+		m2 = Color.colorize({ fg = { 255, 204, 204 }, style = "bold" }), -- Light Red
+		M2 = Color.colorize({ fg = { 255, 100, 100 }, style = "bold" }), -- Red
+		m3 = Color.colorize({ fg = { 255, 165, 0 }, style = "bold" }), -- Orange
+		M3 = Color.colorize({ fg = { 255, 140, 0 }, style = "bold" }), -- Dark Orange
+		["4"] = Color.colorize({ fg = { 173, 216, 230 }, style = "bold" }), -- Light Blue
+		["#4"] = Color.colorize({ fg = { 135, 206, 235 }, style = "bold" }), -- Sky Blue
+		b5 = Color.colorize({ fg = { 128, 0, 128 }, style = "bold" }), -- Purple
+		["5"] = Color.colorize({ fg = { 0, 255, 0 }, style = "bold" }), -- Green
+		["#5"] = Color.colorize({ fg = { 0, 128, 0 }, style = "bold" }), -- Dark Green
+		b6 = Color.colorize({ fg = { 255, 192, 203 }, style = "bold" }), -- Pink
+		["6"] = Color.colorize({ fg = { 255, 105, 180 }, style = "bold" }), -- Hot Pink
+		b7 = Color.colorize({ fg = { 173, 255, 47 }, style = "bold" }), -- Green-Yellow
+		["7"] = Color.colorize({ fg = { 255, 215, 0 }, style = "bold" }), -- Gold
+
+		-- Extensions
+		["9"] = Color.colorize({ fg = { 0, 191, 255 }, style = "bold" }), -- Deep Sky Blue
+		["b9"] = Color.colorize({ fg = { 199, 21, 133 }, style = "bold" }), -- Medium Violet Red
+		["#9"] = Color.colorize({ fg = { 255, 20, 147 }, style = "bold" }), -- Deep Pink
+		["11"] = Color.colorize({ fg = { 106, 90, 205 }, style = "bold" }), -- Slate Blue
+		["#11"] = Color.colorize({ fg = { 147, 112, 219 }, style = "bold" }), -- Medium Purple
+		["13"] = Color.colorize({ fg = { 255, 160, 122 }, style = "bold" }), -- Light Salmon
+
+		-- Modal / Suspended / Add / Omitted
+		add9 = Color.colorize({ fg = { 60, 179, 113 }, style = "bold" }), -- Medium Sea Green
+		sus2 = Color.colorize({ fg = { 244, 164, 96 }, style = "bold" }), -- Sandy Brown
+		sus4 = Color.colorize({ fg = { 218, 112, 214 }, style = "bold" }), -- Orchid
+		no3 = Color.colorize({ fg = { 169, 169, 169 }, style = "bold" }), -- Dark Gray
+		no5 = Color.colorize({ fg = { 112, 128, 144 }, style = "bold" }), -- Slate Gray
+	},
 }
 
 -- Tuning Related
 local tunings = {
 	standard = { "E", "B", "G", "D", "A", "E" },
-}
-
--- Roles
-local RoleColors = {
-	-- Core intervals
-	root = Color.colorize({ fg = { 255, 255, 255 } }), -- White
-	m2 = Color.colorize({ fg = { 255, 204, 204 } }), -- Light Red
-	M2 = Color.colorize({ fg = { 255, 100, 100 } }), -- Red
-	m3 = Color.colorize({ fg = { 255, 165, 0 } }), -- Orange
-	M3 = Color.colorize({ fg = { 255, 140, 0 } }), -- Dark Orange
-	["4"] = Color.colorize({ fg = { 173, 216, 230 } }), -- Light Blue
-	["#4"] = Color.colorize({ fg = { 135, 206, 235 } }), -- Sky Blue
-	b5 = Color.colorize({ fg = { 128, 0, 128 } }), -- Purple
-	["5"] = Color.colorize({ fg = { 0, 255, 0 } }), -- Green
-	["#5"] = Color.colorize({ fg = { 0, 128, 0 } }), -- Dark Green
-	b6 = Color.colorize({ fg = { 255, 192, 203 } }), -- Pink
-	["6"] = Color.colorize({ fg = { 255, 105, 180 } }), -- Hot Pink
-	b7 = Color.colorize({ fg = { 173, 255, 47 } }), -- Green-Yellow
-	["7"] = Color.colorize({ fg = { 255, 215, 0 } }), -- Gold
-
-	-- Extensions
-	["9"] = Color.colorize({ fg = { 0, 191, 255 } }), -- Deep Sky Blue
-	["b9"] = Color.colorize({ fg = { 199, 21, 133 } }), -- Medium Violet Red
-	["#9"] = Color.colorize({ fg = { 255, 20, 147 } }), -- Deep Pink
-	["11"] = Color.colorize({ fg = { 106, 90, 205 } }), -- Slate Blue
-	["#11"] = Color.colorize({ fg = { 147, 112, 219 } }), -- Medium Purple
-	["13"] = Color.colorize({ fg = { 255, 160, 122 } }), -- Light Salmon
-
-	-- Modal / Suspended / Add / Omitted
-	add9 = Color.colorize({ fg = { 60, 179, 113 } }), -- Medium Sea Green
-	sus2 = Color.colorize({ fg = { 244, 164, 96 } }), -- Sandy Brown
-	sus4 = Color.colorize({ fg = { 218, 112, 214 } }), -- Orchid
-	no3 = Color.colorize({ fg = { 169, 169, 169 } }), -- Dark Gray
-	no5 = Color.colorize({ fg = { 112, 128, 144 } }), -- Slate Gray
 }
 
 -- Fretboard Related
@@ -154,13 +153,34 @@ function Fretboard:render()
 		local open_note = str[0]
 
 		-- TODO: Render open note
-		local open_note_display = open_note.enabled and fmt.enabled_note(open_note.name)
-			or fmt.disabled_note(open_note.name)
-		io.write("[" .. open_note_display .. "] || ")
+		local open_note_display
+		if open_note.enabled then
+			if open_note.role and fmt.roles[open_note.role] then
+				open_note_display = fmt.roles[open_note.role](open_note.name)
+			else
+				open_note_display = fmt.enabled_note(open_note.name)
+			end
+		else
+			open_note_display = fmt.disabled_note(open_note.name)
+		end
+
+		io.write(string.format(" %-5s ", open_note_display .. " | "))
 
 		for fret = 1, self.frets do
 			local note = str[fret]
-			local display = note.enabled and fmt.enabled_note(note.name) or fmt.disabled_note(note.name)
+
+			-- TODO: Render note
+			local display
+			if note.enabled then
+				if note.role and fmt.roles[note.role] then
+					display = fmt.roles[note.role](note.name)
+				else
+					display = fmt.enabled_note(note.name)
+				end
+			else
+				display = fmt.disabled_note(note.name)
+			end
+
 			display = #note.name == 2 and display or display .. " "
 			io.write(string.format(" %-5s", display .. " | "))
 		end
@@ -173,9 +193,11 @@ local fb = Fretboard:new(tunings.standard, 17)
 
 local interval = 0
 local major_scale = { 2, 2, 1, 2, 2, 2, 1, 2 }
+local major_scale_role = { "root", "M2", "M3", "4", "5", "6", "7", "root" }
 
-for _, step in ipairs(major_scale) do
-	fb:toggle(1, interval)
+for i, step in ipairs(major_scale) do
+	print(major_scale_role[i])
+	fb:enable(1, interval, major_scale_role[i])
 	interval = interval + step
 end
 
