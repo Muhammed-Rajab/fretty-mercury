@@ -47,7 +47,7 @@ function Fretboard:toggle(string_index, fret)
 	self.notes[string_index][fret].enabled = not self.notes[string_index][fret].enabled
 end
 
-function Fretboard:enable(string_index, fret, role)
+function Fretboard:enable(string_index, fret, role, label)
 	if string_index < 1 or string_index > 6 then
 		print(fmt.error(string.format("warning: must be 1 <= string index <= 6 (got %s)", string_index)))
 		return
@@ -60,6 +60,7 @@ function Fretboard:enable(string_index, fret, role)
 
 	self.notes[string_index][fret].enabled = true
 	self.notes[string_index][fret].role = role
+	self.notes[string_index][fret].label = label
 end
 
 function Fretboard:disable(string_index, fret)
@@ -75,11 +76,12 @@ function Fretboard:disable(string_index, fret)
 
 	self.notes[string_index][fret].enabled = false
 	self.notes[string_index][fret].role = nil
+	self.notes[string_index][fret].label = nil
 end
 
 function Fretboard:highlight_notes(notes)
 	-- every string
-	for string_index, str in ipairs(self.notes) do
+	for _, str in ipairs(self.notes) do
 		-- every fret
 		for fret = 0, self.frets do
 			local note = str[fret] -- NOTE: it can also be an OPEN note
@@ -107,7 +109,7 @@ function Fretboard:clear()
 end
 
 function Fretboard:render()
-	for string_index, str in ipairs(self.notes) do
+	for _, str in ipairs(self.notes) do
 		local open_note = str[0]
 
 		-- TODO: Render open note
