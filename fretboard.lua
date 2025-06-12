@@ -1,4 +1,4 @@
-local fmt = require("fmt")
+local fmtcolor = require("fmtcolor")
 local Note = require("note")
 local tunings = require("tunings")
 
@@ -36,12 +36,12 @@ end
 
 function Fretboard:toggle(string_index, fret)
 	if string_index < 1 or string_index > 6 then
-		print(fmt.error(string.format("warning: must be 1 <= string index <= 6 (got %s)", string_index)))
+		print(fmtcolor.error(string.format("warning: must be 1 <= string index <= 6 (got %s)", string_index)))
 		return
 	end
 
 	if fret < 0 or fret > self.frets then
-		print(fmt.error(string.format("warning: must be 0 <= fret <= %d (got %d)", self.frets, fret)))
+		print(fmtcolor.error(string.format("warning: must be 0 <= fret <= %d (got %d)", self.frets, fret)))
 		return
 	end
 
@@ -50,12 +50,12 @@ end
 
 function Fretboard:enable(string_index, fret, role, label)
 	if string_index < 1 or string_index > 6 then
-		print(fmt.error(string.format("warning: must be 1 <= string index <= 6 (got %s)", string_index)))
+		print(fmtcolor.error(string.format("warning: must be 1 <= string index <= 6 (got %s)", string_index)))
 		return
 	end
 
 	if fret < 0 or fret > self.frets then
-		print(fmt.error(string.format("warning: must be 0 <= fret <= %d (got %d)", self.frets, fret)))
+		print(fmtcolor.error(string.format("warning: must be 0 <= fret <= %d (got %d)", self.frets, fret)))
 		return
 	end
 
@@ -66,12 +66,12 @@ end
 
 function Fretboard:disable(string_index, fret)
 	if string_index < 1 or string_index > 6 then
-		print(fmt.error(string.format("warning: must be 1 <= string index <= 6 (got %s)", string_index)))
+		print(fmtcolor.error(string.format("warning: must be 1 <= string index <= 6 (got %s)", string_index)))
 		return
 	end
 
 	if fret < 0 or fret > self.frets then
-		print(fmt.error(string.format("warning: must be 0 <= fret <= %d (got %d)", self.frets, fret)))
+		print(fmtcolor.error(string.format("warning: must be 0 <= fret <= %d (got %d)", self.frets, fret)))
 		return
 	end
 
@@ -109,43 +109,49 @@ function Fretboard:clear()
 	end
 end
 
-function render_open_note(open_note, fb)
+-- TODO: render the fret numbers for easy navigation
+local function render_fret_numbers(fb) end
+
+-- TODO: render the fret markings for easier navigation
+local function render_fret_marking(fb) end
+
+local function render_open_note(open_note, fb)
 	local open_note_text = open_note.label or open_note.name
 
 	-- TODO: Render open note
 	local open_note_display
 	if open_note.enabled then
-		if open_note.role and fmt.roles[open_note.role] then
-			open_note_display = fmt.roles[open_note.role](open_note_text)
+		if open_note.role and fmtcolor.roles[open_note.role] then
+			open_note_display = fmtcolor.roles[open_note.role](open_note_text)
 		else
-			open_note_display = fmt.enabled_note(open_note_text)
+			open_note_display = fmtcolor.enabled_note(open_note_text)
 		end
 	else
 		if fb.hide_disabled then
 			open_note_display = string.rep(" ", #open_note_text)
 		else
-			open_note_display = fmt.disabled_note(open_note_text)
+			open_note_display = fmtcolor.disabled_note(open_note_text)
 		end
 	end
 
 	return string.format(" %-5s ", open_note_display .. "| ")
 end
 
-function render_note(note, fb)
+local function render_note(note, fb)
 	local display
 	local note_text = note.label or note.name
 
 	if note.enabled then
-		if note.role and fmt.roles[note.role] then
-			display = fmt.roles[note.role](note_text)
+		if note.role and fmtcolor.roles[note.role] then
+			display = fmtcolor.roles[note.role](note_text)
 		else
-			display = fmt.enabled_note(note_text)
+			display = fmtcolor.enabled_note(note_text)
 		end
 	else
 		if fb.hide_disabled then
 			display = string.rep("-", #note_text)
 		else
-			display = fmt.disabled_note(note_text)
+			display = fmtcolor.disabled_note(note_text)
 		end
 	end
 

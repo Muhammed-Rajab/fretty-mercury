@@ -1,6 +1,6 @@
 local Color = require("color")
 
-local fmt = {
+local fmtcolor = {
 	error = Color.colorize({
 		fg = "red",
 		style = "bold",
