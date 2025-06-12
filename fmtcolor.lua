@@ -27,10 +27,10 @@ local fmtcolor = {
 		b5 = Color.colorize({ fg = { 128, 0, 128 }, style = "bold" }), -- Purple
 		["5"] = Color.colorize({ fg = { 0, 255, 0 }, style = "bold" }), -- Green
 		["#5"] = Color.colorize({ fg = { 0, 128, 0 }, style = "bold" }), -- Dark Green
-		b6 = Color.colorize({ fg = { 255, 192, 203 }, style = "bold" }), -- Pink
-		["6"] = Color.colorize({ fg = { 255, 105, 180 }, style = "bold" }), -- Hot Pink
-		b7 = Color.colorize({ fg = { 173, 255, 47 }, style = "bold" }), -- Green-Yellow
-		["7"] = Color.colorize({ fg = { 255, 215, 0 }, style = "bold" }), -- Gold
+		m6 = Color.colorize({ fg = { 255, 192, 203 }, style = "bold" }), -- Pink
+		M6 = Color.colorize({ fg = { 255, 105, 180 }, style = "bold" }), -- Hot Pink
+		m7 = Color.colorize({ fg = { 173, 255, 47 }, style = "bold" }), -- Green-Yellow
+		M7 = Color.colorize({ fg = { 255, 215, 0 }, style = "bold" }), -- Gold
 
 		-- Extensions
 		["9"] = Color.colorize({ fg = { 0, 191, 255 }, style = "bold" }), -- Deep Sky Blue

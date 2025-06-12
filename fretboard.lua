@@ -14,16 +14,20 @@ local intervals = {
 	"b5",
 	"5",
 	"#5",
-	"b6",
-	"6",
-	"b7",
-	"7",
+	"m6",
+	"M6",
+	"m7",
+	"M7",
+
+	-- Extensions
 	"9",
 	"b9",
 	"#9",
 	"11",
 	"#11",
 	"13",
+
+	-- Chord modifiers
 	"add9",
 	"sus2",
 	"sus4",
