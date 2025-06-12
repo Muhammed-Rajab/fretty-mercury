@@ -9,6 +9,7 @@ function Fretboard:new(tuning, frets)
 		tuning = tuning or tunings.standard,
 		frets = frets or 12,
 		notes = {},
+		hide_disabled = true,
 	}
 
 	-- Generate State for every Note
@@ -111,37 +112,47 @@ end
 function Fretboard:render()
 	for _, str in ipairs(self.notes) do
 		local open_note = str[0]
+		local open_note_text = open_note.label or open_note.name
 
 		-- TODO: Render open note
 		local open_note_display
 		if open_note.enabled then
 			if open_note.role and fmt.roles[open_note.role] then
-				open_note_display = fmt.roles[open_note.role](open_note.label or open_note.name)
+				open_note_display = fmt.roles[open_note.role](open_note_text)
 			else
-				open_note_display = fmt.enabled_note(open_note.label or open_note.name)
+				open_note_display = fmt.enabled_note(open_note_text)
 			end
 		else
-			open_note_display = fmt.disabled_note(open_note.label or open_note.name)
+			if self.hide_disabled then
+				open_note_display = string.rep(" ", #open_note_text)
+			else
+				open_note_display = fmt.disabled_note(open_note_text)
+			end
 		end
 
-		io.write(string.format(" %-5s ", open_note_display .. " | "))
+		io.write(string.format(" %-5s ", open_note_display .. "| "))
 
 		for fret = 1, self.frets do
 			local note = str[fret]
+			local note_text = note.label or note.name
 
 			-- TODO: Render note
 			local display
 			if note.enabled then
 				if note.role and fmt.roles[note.role] then
-					display = fmt.roles[note.role](note.label or note.name)
+					display = fmt.roles[note.role](note_text)
 				else
-					display = fmt.enabled_note(note.label or note.name)
+					display = fmt.enabled_note(note_text)
 				end
 			else
-				display = fmt.disabled_note(note.label or note.name)
+				if self.hide_disabled then
+					display = string.rep("-", #note_text)
+				else
+					display = fmt.disabled_note(note_text)
+				end
 			end
 
-			display = #(note.label or note.name) == 3 and display or display .. " "
+			display = #note_text == 3 and display or display .. " "
 			io.write(string.format(" %-5s", display .. " | "))
 		end
 

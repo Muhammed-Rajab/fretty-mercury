@@ -28,5 +28,5 @@ local c_major_scale = {
 	{ name = "B", role = "7", label = "vii" },
 }
 
-fb:highlight_notes(c_maj7)
+fb:highlight_notes(a_minor)
 fb:render()
