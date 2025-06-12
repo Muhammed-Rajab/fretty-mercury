@@ -135,17 +135,17 @@ function Fretboard:disable(string_index, fret)
 	self.notes[string_index][fret].role = nil
 end
 
-function Fretboard:highlight_chord(chord_notes)
+function Fretboard:highlight_notes(notes)
 	-- every string
 	for string_index, str in ipairs(self.notes) do
 		-- every fret
 		for fret = 0, self.frets do
 			local note = str[fret] -- NOTE: it can also be an OPEN note
 			-- every chord note
-			for _, chord_note in ipairs(chord_notes) do
-				if chord_note.name == note.name then
+			for _, n_note in ipairs(notes) do
+				if n_note.name == note.name then
 					note.enabled = true
-					note.role = chord_note.role
+					note.role = n_note.role
 					break
 				end
 			end
@@ -230,5 +230,15 @@ local c_maj7 = {
 	{ name = "B", role = "7" },
 }
 
-fb:highlight_chord(c_maj7)
+local c_major_scale = {
+	{ name = "C", role = "root" },
+	{ name = "D", role = "M2" },
+	{ name = "E", role = "M3" },
+	{ name = "F", role = "4" },
+	{ name = "G", role = "5" },
+	{ name = "A", role = "6" },
+	{ name = "B", role = "7" },
+}
+
+fb:highlight_notes(c_major_scale)
 fb:render()
