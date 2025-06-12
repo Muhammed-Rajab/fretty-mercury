@@ -49,4 +49,4 @@ local fmtcolor = {
 	},
 }
 
-return fmt
+return fmtcolor
