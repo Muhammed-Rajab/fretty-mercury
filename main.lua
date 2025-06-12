@@ -11,6 +11,10 @@ local fmt = {
 		fg = "red",
 		style = "bold",
 	}),
+
+	disabled_note = Color.colorize({
+		fg = { 128, 128, 128 },
+	}),
 }
 
 -- Tuning Related
@@ -70,9 +74,9 @@ function Fretboard:render()
 
 		for fret = 1, self.frets do
 			local note = str[fret]
-			local display = note.enabled and "[" .. note.name .. "]" or note.name
+			local display = note.enabled and note.name or fmt.disabled_note(note.name)
 			display = #note.name == 2 and display or display .. " "
-			io.write(string.format("%-5s", display .. "|"))
+			io.write(string.format(" %-5s", display .. " | "))
 		end
 
 		io.write("\n")
