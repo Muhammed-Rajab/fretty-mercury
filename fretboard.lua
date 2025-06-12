@@ -109,26 +109,33 @@ function Fretboard:clear()
 	end
 end
 
+function render_open_note(open_note, fb)
+	local open_note_text = open_note.label or open_note.name
+
+	-- TODO: Render open note
+	local open_note_display
+	if open_note.enabled then
+		if open_note.role and fmt.roles[open_note.role] then
+			open_note_display = fmt.roles[open_note.role](open_note_text)
+		else
+			open_note_display = fmt.enabled_note(open_note_text)
+		end
+	else
+		if fb.hide_disabled then
+			open_note_display = string.rep(" ", #open_note_text)
+		else
+			open_note_display = fmt.disabled_note(open_note_text)
+		end
+	end
+
+	return open_note_display
+end
+
 function Fretboard:render()
 	for _, str in ipairs(self.notes) do
 		local open_note = str[0]
-		local open_note_text = open_note.label or open_note.name
 
-		-- TODO: Render open note
-		local open_note_display
-		if open_note.enabled then
-			if open_note.role and fmt.roles[open_note.role] then
-				open_note_display = fmt.roles[open_note.role](open_note_text)
-			else
-				open_note_display = fmt.enabled_note(open_note_text)
-			end
-		else
-			if self.hide_disabled then
-				open_note_display = string.rep(" ", #open_note_text)
-			else
-				open_note_display = fmt.disabled_note(open_note_text)
-			end
-		end
+		local open_note_display = render_open_note(open_note, self)
 
 		io.write(string.format(" %-5s ", open_note_display .. "| "))
 
