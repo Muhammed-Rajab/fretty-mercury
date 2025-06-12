@@ -20,6 +20,11 @@ local fmt = {
 		fg = { 183, 248, 70 },
 		style = "bold",
 	}),
+
+	muted_note = Color.colorize({
+		fg = { 224, 17, 95 },
+		style = "bold",
+	}),
 }
 
 -- Tuning Related
