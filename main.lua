@@ -32,4 +32,4 @@ local c_major_scale = {
 -- fb:render()
 
 local fmt = require("fmt")
-print(fmt.center("rajab", 8, "-") .. fmt.center("1", 10))
+print(fmt.center("rajab", 9, "-") .. fmt.center("1", 10))

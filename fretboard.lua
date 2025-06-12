@@ -3,6 +3,33 @@ local Note = require("note")
 local tunings = require("tunings")
 
 local Fretboard = {}
+local intervals = {
+	"root",
+	"m2",
+	"M2",
+	"m3",
+	"M3",
+	"4",
+	"#4",
+	"b5",
+	"5",
+	"#5",
+	"b6",
+	"6",
+	"b7",
+	"7",
+	"9",
+	"b9",
+	"#9",
+	"11",
+	"#11",
+	"13",
+	"add9",
+	"sus2",
+	"sus4",
+	"no3",
+	"no5",
+}
 
 function Fretboard:new(tuning, frets)
 	local obj = {
@@ -115,6 +142,14 @@ local function render_fret_numbers(fb) end
 -- TODO: render the fret markings for easier navigation
 local function render_fret_marking(fb) end
 
+-- TODO: render the interval hints for easier understanding
+local function render_interval_hints()
+	for _, interval in ipairs(intervals) do
+		io.write(fmtcolor.roles[interval](interval) .. " ")
+	end
+	io.write("\n")
+end
+
 local function render_open_note(open_note, fb)
 	local open_note_text = open_note.label or open_note.name
 
@@ -177,5 +212,7 @@ function Fretboard:render()
 		io.write("\n")
 	end
 end
+
+render_interval_hints()
 
 return Fretboard
