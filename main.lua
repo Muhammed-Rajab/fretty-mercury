@@ -70,7 +70,7 @@ function Fretboard:render()
 	for string_index, str in ipairs(self.notes) do
 		local open_note = self.tuning[string_index]
 
-		io.write(open_note .. "|| ")
+		io.write("[" .. open_note .. "] || ")
 
 		for fret = 1, self.frets do
 			local note = str[fret]
