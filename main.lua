@@ -111,6 +111,36 @@ function Fretboard:toggle(string_index, fret)
 	self.notes[string_index][fret].enabled = not self.notes[string_index][fret].enabled
 end
 
+function Fretboard:enable(string_index, fret, role)
+	if string_index < 1 or string_index > 6 then
+		print(fmt.error(string.format("warning: must be 1 <= string index <= 6 (got %s)", string_index)))
+		return
+	end
+
+	if fret < 0 or fret > self.frets then
+		print(fmt.error(string.format("warning: must be 0 <= fret <= %d (got %d)", self.frets, fret)))
+		return
+	end
+
+	self.notes[string_index][fret].enabled = true
+	self.notes[string_index][fret].role = role
+end
+
+function Fretboard:disable(string_index, fret)
+	if string_index < 1 or string_index > 6 then
+		print(fmt.error(string.format("warning: must be 1 <= string index <= 6 (got %s)", string_index)))
+		return
+	end
+
+	if fret < 0 or fret > self.frets then
+		print(fmt.error(string.format("warning: must be 0 <= fret <= %d (got %d)", self.frets, fret)))
+		return
+	end
+
+	self.notes[string_index][fret].enabled = false
+	self.notes[string_index][fret].role = nil
+end
+
 function Fretboard:clear()
 	for _, string_notes in ipairs(self.notes) do
 		for fret = 0, self.frets do
