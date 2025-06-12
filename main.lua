@@ -15,6 +15,10 @@ local fmt = {
 	disabled_note = Color.colorize({
 		fg = { 128, 128, 128 },
 	}),
+
+	enabled_note = Color.colorize({
+		fg = { 183, 248, 70 },
+	}),
 }
 
 -- Tuning Related
@@ -68,13 +72,16 @@ end
 
 function Fretboard:render()
 	for string_index, str in ipairs(self.notes) do
-		local open_note = self.tuning[string_index]
+		local open_note = str[0]
 
-		io.write("[" .. open_note .. "] || ")
+		-- TODO: Render open note
+		local open_note_display = open_note.enabled and fmt.enabled_note(open_note.name)
+			or fmt.disabled_note(open_note.name)
+		io.write("[" .. open_note_display .. "] || ")
 
 		for fret = 1, self.frets do
 			local note = str[fret]
-			local display = note.enabled and note.name or fmt.disabled_note(note.name)
+			local display = note.enabled and fmt.enabled_note(note.name) or fmt.disabled_note(note.name)
 			display = #note.name == 2 and display or display .. " "
 			io.write(string.format(" %-5s", display .. " | "))
 		end
@@ -84,4 +91,13 @@ function Fretboard:render()
 end
 
 local fb = Fretboard:new(tunings.standard, 17)
+
+local interval = 0
+local major_scale = { 2, 2, 1, 2, 2, 2, 1, 2 }
+
+for _, step in ipairs(major_scale) do
+	fb:toggle(1, interval)
+	interval = interval + step
+end
+
 fb:render()
