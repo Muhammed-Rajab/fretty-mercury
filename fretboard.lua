@@ -128,39 +128,44 @@ function render_open_note(open_note, fb)
 		end
 	end
 
-	return open_note_display
+	return string.format(" %-5s ", open_note_display .. "| ")
+end
+
+function render_note(note, fb)
+	local display
+	local note_text = note.label or note.name
+
+	if note.enabled then
+		if note.role and fmt.roles[note.role] then
+			display = fmt.roles[note.role](note_text)
+		else
+			display = fmt.enabled_note(note_text)
+		end
+	else
+		if fb.hide_disabled then
+			display = string.rep("-", #note_text)
+		else
+			display = fmt.disabled_note(note_text)
+		end
+	end
+
+	display = #note_text == 3 and display or display .. " "
+
+	return string.format(" %-5s", display .. " | ")
 end
 
 function Fretboard:render()
 	for _, str in ipairs(self.notes) do
 		local open_note = str[0]
-
 		local open_note_display = render_open_note(open_note, self)
 
-		io.write(string.format(" %-5s ", open_note_display .. "| "))
+		io.write(open_note_display)
 
 		for fret = 1, self.frets do
 			local note = str[fret]
-			local note_text = note.label or note.name
+			local display = render_note(note, self)
 
-			-- TODO: Render note
-			local display
-			if note.enabled then
-				if note.role and fmt.roles[note.role] then
-					display = fmt.roles[note.role](note_text)
-				else
-					display = fmt.enabled_note(note_text)
-				end
-			else
-				if self.hide_disabled then
-					display = string.rep("-", #note_text)
-				else
-					display = fmt.disabled_note(note_text)
-				end
-			end
-
-			display = #note_text == 3 and display or display .. " "
-			io.write(string.format(" %-5s", display .. " | "))
+			io.write(display)
 		end
 
 		io.write("\n")
