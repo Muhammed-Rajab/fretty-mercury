@@ -9,7 +9,7 @@ function Fretboard:new(tuning, frets)
 		tuning = tuning or tunings.standard,
 		frets = frets or 12,
 		notes = {},
-		hide_disabled = true,
+		hide_disabled = false,
 	}
 
 	-- Generate State for every Note
@@ -155,7 +155,7 @@ local function render_note(note, fb)
 		end
 	end
 
-	display = #note_text == 3 and display or display .. " "
+	-- display = #note_text == 3 and display or display .. " "
 
 	return string.format(" %-5s", display .. " | ")
 end
