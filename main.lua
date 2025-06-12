@@ -21,11 +21,6 @@ local fmt = {
 		style = "bold",
 	}),
 
-	muted_note = Color.colorize({
-		fg = { 224, 17, 95 },
-		style = "bold",
-	}),
-
 	roles = {
 		-- Core intervals
 		root = Color.colorize({ fg = { 255, 255, 255 }, style = "bold" }), -- White
@@ -140,6 +135,24 @@ function Fretboard:disable(string_index, fret)
 	self.notes[string_index][fret].role = nil
 end
 
+function Fretboard:highlight_chord(chord_notes)
+	-- every string
+	for string_index, str in ipairs(self.notes) do
+		-- every fret
+		for fret = 0, self.frets do
+			local note = str[fret] -- NOTE: it can also be an OPEN note
+			-- every chord note
+			for _, chord_note in ipairs(chord_notes) do
+				if chord_note.name == note.name then
+					note.enabled = true
+					note.role = chord_note.role
+					break
+				end
+			end
+		end
+	end
+end
+
 function Fretboard:clear()
 	for _, string_notes in ipairs(self.notes) do
 		for fret = 0, self.frets do
@@ -196,9 +209,26 @@ local major_scale = { 2, 2, 1, 2, 2, 2, 1, 2 }
 local major_scale_role = { "root", "M2", "M3", "4", "5", "6", "7", "root" }
 
 for i, step in ipairs(major_scale) do
-	print(major_scale_role[i])
 	fb:enable(1, interval, major_scale_role[i])
 	interval = interval + step
 end
 
+fb:render()
+fb:clear()
+print("\n\n===========================================\n\n")
+
+local a_minor = {
+	{ name = "A", role = "root" },
+	{ name = "C", role = "m3" },
+	{ name = "E", role = "5" },
+}
+
+local c_maj7 = {
+	{ name = "C", role = "root" },
+	{ name = "E", role = "M3" },
+	{ name = "G", role = "5" },
+	{ name = "B", role = "7" },
+}
+
+fb:highlight_chord(c_maj7)
 fb:render()
