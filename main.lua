@@ -1,25 +1,9 @@
--- HERE WE GO AGAIN! I HAVE NO FREAKING IDEA WHAT I'M DOING HERE, BUT HERE WE ARE ON A WEDNESDAY,
--- LEARNING LUA :)
-
 -- Modules
 local tunings = require("tunings")
 local Fretboard = require("fretboard")
 
--- Fretboard Related
+-- Fretboard
 local fb = Fretboard:new(tunings.standard, 17)
-
-local interval = 0
-local major_scale = { 2, 2, 1, 2, 2, 2, 1, 2 }
-local major_scale_role = { "root", "M2", "M3", "4", "5", "6", "7", "root" }
-
-for i, step in ipairs(major_scale) do
-	fb:enable(1, interval, major_scale_role[i])
-	interval = interval + step
-end
-
-fb:render()
-fb:clear()
-print("\n\n===========================================\n\n")
 
 local a_minor = {
 	{ name = "A", role = "root" },
