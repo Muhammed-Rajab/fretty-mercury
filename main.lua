@@ -5,7 +5,13 @@
 local Color = require("color")
 local Note = require("note")
 
--- Note Related
+-- Formatter for outputs
+local fmt = {
+	error = Color.colorize({
+		fg = "red",
+		style = "bold",
+	}),
+}
 
 -- Tuning Related
 local tunings = {
@@ -44,12 +50,12 @@ end
 
 function Fretboard:toggle(string_index, fret)
 	if string_index < 1 or string_index > 6 then
-		print(string.format("warning: must be 1 <= string index <= 6 (%s given)", string_index))
+		print(fmt.error(string.format("warning: must be 1 <= string index <= 6 (got %s)", string_index)))
 		return
 	end
 
 	if fret < 0 or fret > self.frets then
-		print(string.format("warning: must be 0 <= fret <= %d (%d given)", self.frets, fret))
+		print(fmt.error(string.format("warning: must be 0 <= fret <= %d (got %d)", self.frets, fret)))
 		return
 	end
 
@@ -74,5 +80,4 @@ function Fretboard:render()
 end
 
 local fb = Fretboard:new(tunings.standard, 17)
-fb:toggle(1, 0)
 fb:render()
