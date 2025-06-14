@@ -1,7 +1,7 @@
 local fmtcolor = require("fmtcolor")
+local Color = require("color")
 local intervals = require("fretboard.intervals")
 
--- TODO: render the interval hints for easier understanding
 local function render_interval_hints()
 	for _, interval in ipairs(intervals) do
 		io.write(fmtcolor.roles[interval](interval) .. " ")
@@ -9,10 +9,28 @@ local function render_interval_hints()
 	io.write("\n")
 end
 
+local function render_highlighted_notes(fb)
+	local set = {}
+	for _, str in ipairs(fb.notes) do
+		for fret = 0, fb.frets do
+			local note = str[fret]
+			if note.enabled then
+				local role_func = fmtcolor.roles[note.role]
+				set[note.name] = role_func and role_func(note.name) or note.name
+			end
+		end
+	end
+
+	local display = Color.colorize({ style = { "bold", "underline" } })("Highlighted Notes") .. ": "
+	for _, note in pairs(set) do
+		display = display .. note .. " "
+	end
+	return display .. "\n"
+end
+
 local function render_open_note(open_note, fb)
 	local open_note_text = open_note.label or open_note.name
 
-	-- TODO: Render open note
 	local open_note_display
 	if open_note.enabled then
 		if open_note.role and fmtcolor.roles[open_note.role] then
@@ -54,6 +72,9 @@ end
 
 return function(Fretboard)
 	function Fretboard:render()
+		io.write(render_highlighted_notes(self))
+		io.write("\n")
+
 		for _, str in ipairs(self.notes) do
 			local open_note = str[0]
 			local open_note_display = render_open_note(open_note, self)
