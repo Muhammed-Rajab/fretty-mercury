@@ -29,6 +29,7 @@ local function render_highlighted_notes(fb)
 	return Color.colorize({ style = { "bold", "underline" } })("Highlighted Notes")
 		.. ": "
 		.. table.concat(highlights, ", ")
+		.. "\n"
 end
 
 local function render_open_note(open_note, fb)

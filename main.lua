@@ -44,5 +44,5 @@ local notes = {
 	{ name = "G", role = "5" },
 }
 
-fb:highlight_notes(notes)
+fb:highlight_notes(c_major_scale)
 fb:render()
