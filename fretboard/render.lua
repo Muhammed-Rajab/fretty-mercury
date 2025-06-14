@@ -49,8 +49,6 @@ local function render_note(note, fb)
 		end
 	end
 
-	-- display = #note_text == 3 and display or display .. " "
-
 	return string.format(" %-5s", display .. " | ")
 end
 
@@ -71,5 +69,8 @@ return function(Fretboard)
 
 			io.write("\n")
 		end
+
+		io.write("\n")
+		io.write(render_interval_hints())
 	end
 end

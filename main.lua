@@ -18,18 +18,25 @@ local c_maj7 = {
 	{ name = "B", role = "7" },
 }
 
+-- local c_major_scale = {
+-- 	{ name = "C", role = "root", label = "I" },
+-- 	{ name = "D", role = "M2", label = "ii" },
+-- 	{ name = "E", role = "M3", label = "iii" },
+-- 	{ name = "F", role = "4", label = "IV" },
+-- 	{ name = "G", role = "5", label = "V" },
+-- 	{ name = "A", role = "6", label = "vi" },
+-- 	{ name = "B", role = "7", label = "vii" },
+-- }
+
 local c_major_scale = {
-	{ name = "C", role = "root", label = "I" },
-	{ name = "D", role = "M2", label = "ii" },
-	{ name = "E", role = "M3", label = "iii" },
-	{ name = "F", role = "4", label = "IV" },
-	{ name = "G", role = "5", label = "V" },
-	{ name = "A", role = "6", label = "vi" },
-	{ name = "B", role = "7", label = "vii" },
+	{ name = "C", role = "root" },
+	{ name = "D", role = "M2" },
+	{ name = "E", role = "M3" },
+	{ name = "F", role = "4" },
+	{ name = "G", role = "5" },
+	{ name = "A", role = "M6" },
+	{ name = "B", role = "M7" },
 }
 
--- fb:highlight_notes(a_minor)
--- fb:render()
-
-local fmt = require("fmt")
-print(fmt.center("rajab", 9, "-") .. fmt.center("1", 10))
+fb:highlight_notes(c_major_scale)
+fb:render()
