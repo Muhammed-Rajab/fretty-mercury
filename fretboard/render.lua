@@ -21,11 +21,14 @@ local function render_highlighted_notes(fb)
 		end
 	end
 
-	local display = Color.colorize({ style = { "bold", "underline" } })("Highlighted Notes") .. ": "
-	for _, note in pairs(set) do
-		display = display .. note .. " "
+	local highlights = {}
+	for _, display_note in pairs(set) do
+		table.insert(highlights, display_note)
 	end
-	return display .. "\n"
+
+	return Color.colorize({ style = { "bold", "underline" } })("Highlighted Notes")
+		.. ": "
+		.. table.concat(highlights, ", ")
 end
 
 local function render_open_note(open_note, fb)
