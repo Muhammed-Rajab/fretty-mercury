@@ -3,11 +3,25 @@ local Color = require("color")
 local fmtcolor = require("fmtcolor")
 local intervals = require("fretboard.intervals")
 
-local function render_fret_markers(fb)
+local function render_fret_numbers(fb, fret_width)
+	local frets = fb.frets
+
+	local offset_x = 3
+
+	local display = string.rep(" ", offset_x)
+
+	for fret = 1, frets do
+		local text = fmt.center(fret .. "", fret_width + 1, " ")
+		display = display .. text
+	end
+
+	return display
+end
+
+local function render_fret_markers(fb, fret_width)
 	local frets = fb.frets
 
 	local offset_x = 2
-	local width = 7
 
 	local marked_frets = {
 		[3] = true,
@@ -23,14 +37,14 @@ local function render_fret_markers(fb)
 	}
 
 	local display = string.rep(" ", offset_x)
-	local calculated_width = width + 2
+	local calculated_width = fret_width + 3
 
 	for fret = 1, frets do
 		if marked_frets[fret] then
 			local text = fmt.center("✦", calculated_width, " ")
 			display = display .. text
 		else
-			display = display .. string.rep(" ", width)
+			display = display .. string.rep(" ", fret_width)
 		end
 	end
 
@@ -89,12 +103,11 @@ local function render_open_note(open_note, fb, str_no)
 	return string.format("" .. fmt.pad_ansi_left(open_note_display, 2) .. "║")
 end
 
-local function render_note(note, fb, str_no, fret_no)
+local function render_note(note, fb, str_no, fret_no, fret_width)
 	local display
 	local note_text = note.label or note.name
-	local width = 6
 	-- local width = math.floor(math.max(8, ((fb.frets - fret_no) / fb.frets) * 16))
-	note_text = fmt.center(note_text, width, "─")
+	note_text = fmt.center(note_text, fret_width, "─")
 
 	if note.enabled then
 		if note.role and fmtcolor.roles[note.role] then
@@ -104,7 +117,7 @@ local function render_note(note, fb, str_no, fret_no)
 		end
 	else
 		if fb.hide_disabled then
-			display = string.rep("─", width)
+			display = string.rep("─", fret_width)
 		else
 			display = fmtcolor.disabled_note(note_text)
 		end
@@ -115,7 +128,12 @@ end
 
 return function(Fretboard)
 	function Fretboard:render()
+		local fret_width = 7
+
 		io.write(render_highlighted_notes(self))
+		io.write("\n")
+		io.write(render_fret_numbers(self, fret_width))
+		io.write("\n")
 		io.write("\n")
 
 		for str_no, str in ipairs(self.notes) do
@@ -126,7 +144,7 @@ return function(Fretboard)
 
 			for fret = 1, self.frets do
 				local note = str[fret]
-				local display = render_note(note, self, str_no, fret)
+				local display = render_note(note, self, str_no, fret, fret_width)
 
 				io.write(display)
 			end
@@ -135,7 +153,7 @@ return function(Fretboard)
 		end
 
 		io.write("\n")
-		io.write(render_fret_markers(self))
+		io.write(render_fret_markers(self, fret_width))
 
 		io.write("\n")
 		io.write("\n")
