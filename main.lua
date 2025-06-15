@@ -73,8 +73,15 @@ local function render_major_scale_animated(root, title, highlighted_intervals)
 	local pos = root_index
 	io.write("\27[2J\27[H")
 
-	for index = 1, #major_scale_steps do
+	for index = 1, #major_scale_steps + 1 do
 		io.write("\27[H")
+
+		-- Render
+		fb:render({ title = title })
+
+		if index == #major_scale_steps + 1 then
+			break
+		end
 
 		local name = Note.name_at(pos, false)
 		local role = major_notes_roles[index]
@@ -88,7 +95,6 @@ local function render_major_scale_animated(root, title, highlighted_intervals)
 
 		-- Animation delay
 		fb:highlight_notes({ { name = name, role = role, enabled = true } })
-		fb:render({ title = title })
 
 		utils.sleep(delay)
 
