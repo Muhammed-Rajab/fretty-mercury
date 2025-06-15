@@ -3,7 +3,6 @@ local tunings = require("tunings")
 local Fretboard = require("fretboard")
 
 -- Fretboard
-local fb = Fretboard:new(tunings.standard, 17)
 
 local a_minor = {
 	{ name = "A", role = "root" },
@@ -44,40 +43,46 @@ local notes = {
 	{ name = "G", role = "5" },
 }
 
--- MAJOR SCALE
 local Note = require("note")
 
-local major_scale_steps = { 2, 2, 1, 2, 2, 2, 1 }
+-- MAJOR SCALE
+local function render_major_scale(root)
+	local fb = Fretboard:new(tunings.standard, 17)
 
-local c_major_notes = {
-	C = true,
-	D = true,
-	E = true,
-	F = true,
-	G = true,
-	A = true,
-	B = true,
-}
+	local root_index = Note.index_of(root, false)
 
-local c_major_notes_roles = {
-	C = "root",
-	D = "M2",
-	E = "M3",
-	F = "4",
-	G = "5",
-	A = "M6",
-	B = "M7",
-}
+	local major_scale_steps = { 2, 2, 1, 2, 2, 2, 1 }
+	local major_notes_roles = { "root", "M2", "M3", "4", "5", "M6", "M7" }
 
-for str_no, str_data in ipairs(fb.notes) do
-	for fret = 0, 3 do
-		local note = str_data[fret]
-		if note and c_major_notes[note.name] then
-			local role = c_major_notes_roles[note.name]
-			fb:enable(str_no, fret, role, nil)
-		end
+	local pos = root_index
+	for index = 1, #major_scale_steps do
+		local name = Note.name_at(pos, false)
+		local role = major_notes_roles[index]
+		fb:highlight_notes({ { name = name, role = role, enabled = true } })
+		pos = pos + major_scale_steps[index]
 	end
+
+	fb:render()
 end
 
--- fb:highlight_notes(c_major_scale)
-fb:render()
+local function render_minor_scale(root)
+	local fb = Fretboard:new(tunings.standard, 17)
+
+	local root_index = Note.index_of(root, false)
+
+	local minor_scale_steps = { 2, 1, 2, 2, 1, 2, 2 }
+	local minor_notes_roles = { "root", "M2", "m3", "4", "5", "m6", "m7" }
+	local pos = root_index
+
+	for index = 1, #minor_scale_steps do
+		local name = Note.name_at(pos, false)
+		local role = minor_notes_roles[index]
+		fb:highlight_notes({ { name = name, role = role, enabled = true } })
+		pos = pos + minor_scale_steps[index]
+	end
+
+	fb:render()
+end
+
+render_major_scale("C")
+render_minor_scale("A")
