@@ -3,6 +3,40 @@ local Color = require("color")
 local fmtcolor = require("fmtcolor")
 local intervals = require("fretboard.intervals")
 
+local function render_fret_markers(fb)
+	local frets = fb.frets
+
+	local offset_x = 2
+	local width = 7
+
+	local marked_frets = {
+		[3] = true,
+		[5] = true,
+		[7] = true,
+		[9] = true,
+		[12] = true,
+		[15] = true,
+		[17] = true,
+		[19] = true,
+		[21] = true,
+		[24] = true,
+	}
+
+	local display = string.rep(" ", offset_x)
+	local calculated_width = width + 2
+
+	for fret = 1, frets do
+		if marked_frets[fret] then
+			local text = fmt.center("⁘", calculated_width, " ")
+			display = display .. text
+		else
+			display = display .. string.rep(" ", width)
+		end
+	end
+
+	return display
+end
+
 local function render_interval_hints()
 	for _, interval in ipairs(intervals) do
 		io.write(fmtcolor.roles[interval](interval) .. " ")
@@ -99,6 +133,8 @@ return function(Fretboard)
 
 			io.write("\n")
 		end
+
+		io.write(render_fret_markers(self))
 
 		io.write("\n")
 		io.write(render_interval_hints())
