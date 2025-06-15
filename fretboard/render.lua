@@ -69,7 +69,6 @@ local function render_note(note, fb, str_no, fret_no)
 			display = fmtcolor.enabled_note(note_text)
 		end
 	else
-		-- BUG: IDK WHAT TO DO HERE FOR NOW
 		if fb.hide_disabled then
 			display = string.rep("─", width)
 		else
