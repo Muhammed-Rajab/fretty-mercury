@@ -54,14 +54,11 @@ local function render_open_note(open_note, fb, str_no)
 	return string.format("" .. fmt.pad_ansi_left(open_note_display, 2) .. "║")
 end
 
-local function render_note(note, fb)
+local function render_note(note, fb, str_no, fret_no)
 	local display
 	local note_text = note.label or note.name
-	-- note_text = "[" .. fmt.center(note_text, 6, " ") .. "]"
-	note_text = fmt.center(note_text, 8, "─")
-
-	-- [  G#  ]
-	-- [  G   ]
+	local width = 8
+	note_text = fmt.center(note_text, width, "─")
 
 	if note.enabled then
 		if note.role and fmtcolor.roles[note.role] then
@@ -79,7 +76,6 @@ local function render_note(note, fb)
 	end
 
 	return "" .. display .. "┃"
-	-- return display
 end
 
 return function(Fretboard)
@@ -95,7 +91,7 @@ return function(Fretboard)
 
 			for fret = 1, self.frets do
 				local note = str[fret]
-				local display = render_note(note, self)
+				local display = render_note(note, self, str_no, fret)
 
 				io.write(display)
 			end
