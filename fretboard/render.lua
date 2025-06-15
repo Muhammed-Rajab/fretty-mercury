@@ -21,7 +21,7 @@ end
 local function render_fret_markers(fb, fret_width)
 	local frets = fb.frets
 
-	local offset_x = 2
+	local offset_x = 3
 
 	local marked_frets = {
 		[3] = true,
@@ -37,14 +37,14 @@ local function render_fret_markers(fb, fret_width)
 	}
 
 	local display = string.rep(" ", offset_x)
-	local calculated_width = fret_width + 3
+	local calculated_width = fret_width + 1
 
 	for fret = 1, frets do
 		if marked_frets[fret] then
-			local text = fmt.center("✦", calculated_width, " ")
+			local text = fmt.center("*", calculated_width, " ")
 			display = display .. text
 		else
-			display = display .. string.rep(" ", fret_width)
+			display = display .. string.rep(" ", fret_width + 1)
 		end
 	end
 
