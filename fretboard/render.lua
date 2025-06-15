@@ -130,6 +130,7 @@ return function(Fretboard)
 	function Fretboard:render()
 		local fret_width = 7
 
+		io.write("\n")
 		io.write(render_highlighted_notes(self))
 		io.write("\n")
 		io.write(render_fret_numbers(self, fret_width))
