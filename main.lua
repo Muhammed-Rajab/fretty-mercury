@@ -1,49 +1,7 @@
 -- Modules
+local Note = require("note")
 local tunings = require("tunings")
 local Fretboard = require("fretboard")
-
--- Fretboard
-
-local a_minor = {
-	{ name = "A", role = "R" },
-	{ name = "C", role = "m3" },
-	{ name = "E", role = "5" },
-}
-
-local c_maj7 = {
-	{ name = "C", role = "R" },
-	{ name = "E", role = "M3" },
-	{ name = "G", role = "5" },
-	{ name = "B", role = "M7" },
-}
-
--- local c_major_scale = {
--- 	{ name = "C", role = "R", label = "I" },
--- 	{ name = "D", role = "M2", label = "ii" },
--- 	{ name = "E", role = "M3", label = "iii" },
--- 	{ name = "F", role = "4", label = "IV" },
--- 	{ name = "G", role = "5", label = "V" },
--- 	{ name = "A", role = "6", label = "vi" },
--- 	{ name = "B", role = "7", label = "vii" },
--- }
-
-local c_major_scale = {
-	{ name = "C", role = "R" },
-	{ name = "D", role = "M2" },
-	{ name = "E", role = "M3" },
-	{ name = "F", role = "4" },
-	{ name = "G", role = "5" },
-	{ name = "A", role = "M6" },
-	{ name = "B", role = "M7" },
-}
-
-local notes = {
-	{ name = "C", role = "R" },
-	{ name = "E", role = "M3" },
-	{ name = "G", role = "5" },
-}
-
-local Note = require("note")
 
 -- MAJOR SCALE
 local function render_major_scale(root)
@@ -84,5 +42,8 @@ local function render_minor_scale(root)
 	fb:render({ title = string.upper(root) .. " Minor Scale 🎸" })
 end
 
-render_major_scale("C")
-render_minor_scale("A")
+-- clears screen
+io.write("\27[2J\27[H")
+
+-- render_major_scale("C")
+-- render_minor_scale("A")
