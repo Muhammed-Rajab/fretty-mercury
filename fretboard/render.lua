@@ -6,7 +6,7 @@ local intervals = require("fretboard.intervals")
 local function render_fret_numbers(fb, fret_width)
 	local frets = fb.frets
 
-	local offset_x = 3
+	local offset_x = 4
 
 	local display = string.rep(" ", offset_x)
 
@@ -21,7 +21,7 @@ end
 local function render_fret_markers(fb, fret_width)
 	local frets = fb.frets
 
-	local offset_x = 3
+	local offset_x = 4
 
 	local marked_frets = {
 		[3] = true,
@@ -100,7 +100,7 @@ local function render_open_note(open_note, fb, str_no)
 		open_note_display = fmtcolor.disabled_note(open_note_text)
 	end
 
-	return string.format("" .. fmt.pad_ansi_left(open_note_display, 2) .. "║")
+	return string.format(" " .. fmt.pad_ansi_left(open_note_display, 2) .. "║")
 end
 
 local function render_note(note, fb, str_no, fret_no, fret_width)
