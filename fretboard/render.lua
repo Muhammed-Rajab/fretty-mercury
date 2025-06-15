@@ -27,7 +27,7 @@ local function render_fret_markers(fb)
 
 	for fret = 1, frets do
 		if marked_frets[fret] then
-			local text = fmt.center("⁘", calculated_width, " ")
+			local text = fmt.center("✦", calculated_width, " ")
 			display = display .. text
 		else
 			display = display .. string.rep(" ", width)
@@ -134,8 +134,10 @@ return function(Fretboard)
 			io.write("\n")
 		end
 
+		io.write("\n")
 		io.write(render_fret_markers(self))
 
+		io.write("\n")
 		io.write("\n")
 		io.write(render_interval_hints())
 	end
