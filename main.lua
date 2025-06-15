@@ -5,20 +5,20 @@ local Fretboard = require("fretboard")
 -- Fretboard
 
 local a_minor = {
-	{ name = "A", role = "root" },
+	{ name = "A", role = "R" },
 	{ name = "C", role = "m3" },
 	{ name = "E", role = "5" },
 }
 
 local c_maj7 = {
-	{ name = "C", role = "root" },
+	{ name = "C", role = "R" },
 	{ name = "E", role = "M3" },
 	{ name = "G", role = "5" },
 	{ name = "B", role = "M7" },
 }
 
 -- local c_major_scale = {
--- 	{ name = "C", role = "root", label = "I" },
+-- 	{ name = "C", role = "R", label = "I" },
 -- 	{ name = "D", role = "M2", label = "ii" },
 -- 	{ name = "E", role = "M3", label = "iii" },
 -- 	{ name = "F", role = "4", label = "IV" },
@@ -28,7 +28,7 @@ local c_maj7 = {
 -- }
 
 local c_major_scale = {
-	{ name = "C", role = "root" },
+	{ name = "C", role = "R" },
 	{ name = "D", role = "M2" },
 	{ name = "E", role = "M3" },
 	{ name = "F", role = "4" },
@@ -38,7 +38,7 @@ local c_major_scale = {
 }
 
 local notes = {
-	{ name = "C", role = "root" },
+	{ name = "C", role = "R" },
 	{ name = "E", role = "M3" },
 	{ name = "G", role = "5" },
 }
@@ -52,7 +52,7 @@ local function render_major_scale(root)
 	local root_index = Note.index_of(root, false)
 
 	local major_scale_steps = { 2, 2, 1, 2, 2, 2, 1 }
-	local major_notes_roles = { "root", "M2", "M3", "4", "5", "M6", "M7" }
+	local major_notes_roles = { "R", "M2", "M3", "4", "5", "M6", "M7" }
 
 	local pos = root_index
 	for index = 1, #major_scale_steps do
@@ -62,7 +62,7 @@ local function render_major_scale(root)
 		pos = pos + major_scale_steps[index]
 	end
 
-	fb:render()
+	fb:render({ title = string.upper(root) .. " Major Scale 🎸" })
 end
 
 local function render_minor_scale(root)
@@ -71,18 +71,18 @@ local function render_minor_scale(root)
 	local root_index = Note.index_of(root, false)
 
 	local minor_scale_steps = { 2, 1, 2, 2, 1, 2, 2 }
-	local minor_notes_roles = { "root", "M2", "m3", "4", "5", "m6", "m7" }
+	local minor_notes_roles = { "R", "M2", "m3", "4", "5", "m6", "m7" }
 	local pos = root_index
 
 	for index = 1, #minor_scale_steps do
 		local name = Note.name_at(pos, false)
 		local role = minor_notes_roles[index]
-		fb:highlight_notes({ { name = name, role = role, enabled = true } })
+		fb:highlight_notes({ { name = name, role = role, enabled = true, label = role } })
 		pos = pos + minor_scale_steps[index]
 	end
 
 	fb:render({ title = string.upper(root) .. " Minor Scale 🎸" })
 end
 
--- render_major_scale("C")
+render_major_scale("C")
 render_minor_scale("A")

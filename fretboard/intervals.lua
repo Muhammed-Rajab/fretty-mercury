@@ -1,5 +1,5 @@
 local intervals = {
-	"root",
+	"R",
 	"m2",
 	"M2",
 	"m3",
