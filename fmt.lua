@@ -8,12 +8,12 @@ function fmt.center(text, width, pad_char)
 	return string.rep(pad_char or " ", left) .. text .. string.rep(pad_char or " ", right)
 end
 
-local function strip_ansi(str)
+function fmt.strip_ansi(str)
 	return str:gsub("\27%[[%d;]*m", "")
 end
 
 function fmt.pad_ansi_left(str, width)
-	local visible = strip_ansi(str)
+	local visible = fmt.strip_ansi(str)
 	local pad = width - #visible
 	if pad > 0 then
 		return str .. string.rep(" ", pad)

@@ -15,7 +15,7 @@ local c_maj7 = {
 	{ name = "C", role = "root" },
 	{ name = "E", role = "M3" },
 	{ name = "G", role = "5" },
-	{ name = "B", role = "7" },
+	{ name = "B", role = "M7" },
 }
 
 -- local c_major_scale = {
@@ -44,5 +44,5 @@ local notes = {
 	{ name = "G", role = "5" },
 }
 
-fb:highlight_notes(c_major_scale)
+fb:highlight_notes(c_maj7)
 fb:render()

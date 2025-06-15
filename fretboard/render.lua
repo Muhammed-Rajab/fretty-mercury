@@ -51,12 +51,17 @@ local function render_open_note(open_note, fb, str_no)
 		end
 	end
 
-	return string.format("" .. fmt.pad_ansi_left(open_note_display, 2) .. "||")
+	return string.format("" .. fmt.pad_ansi_left(open_note_display, 2) .. "║")
 end
 
 local function render_note(note, fb)
 	local display
 	local note_text = note.label or note.name
+	-- note_text = "[" .. fmt.center(note_text, 6, " ") .. "]"
+	note_text = fmt.center(note_text, 8, "─")
+
+	-- [  G#  ]
+	-- [  G   ]
 
 	if note.enabled then
 		if note.role and fmtcolor.roles[note.role] then
@@ -65,6 +70,7 @@ local function render_note(note, fb)
 			display = fmtcolor.enabled_note(note_text)
 		end
 	else
+		-- BUG: IDK WHAT TO DO HERE FOR NOW
 		if fb.hide_disabled then
 			display = string.rep("-", #note_text)
 		else
@@ -72,7 +78,8 @@ local function render_note(note, fb)
 		end
 	end
 
-	return string.format(" %-5s", display .. " | ")
+	return "" .. display .. "┃"
+	-- return display
 end
 
 return function(Fretboard)
