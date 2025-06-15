@@ -12,6 +12,7 @@ local function render_fret_numbers(fb, fret_width)
 
 	for fret = 1, frets do
 		local text = fmt.center(fret .. "", fret_width + 1, " ")
+		text = Color.colorize({ fg = { 100, 100, 100 } })(text)
 		display = display .. text
 	end
 
@@ -52,10 +53,11 @@ local function render_fret_markers(fb, fret_width)
 end
 
 local function render_interval_hints()
+	local display = Color.colorize({ style = { "bold", "underline" } })("Hints") .. ": "
 	for _, interval in ipairs(intervals) do
-		io.write(fmtcolor.roles[interval](interval) .. " ")
+		display = display .. fmtcolor.roles[interval](interval) .. " "
 	end
-	io.write("\n")
+	return display .. "\n"
 end
 
 local function render_highlighted_notes(fb)
