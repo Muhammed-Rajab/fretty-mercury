@@ -81,8 +81,8 @@ local function render_minor_scale(root)
 		pos = pos + minor_scale_steps[index]
 	end
 
-	fb:render()
+	fb:render({ title = string.upper(root) .. " Minor Scale 🎸" })
 end
 
-render_major_scale("C")
+-- render_major_scale("C")
 render_minor_scale("A")

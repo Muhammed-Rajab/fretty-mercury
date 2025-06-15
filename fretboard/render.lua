@@ -3,6 +3,15 @@ local Color = require("color")
 local fmtcolor = require("fmtcolor")
 local intervals = require("fretboard.intervals")
 
+local function render_title(title)
+	local styled = Color.colorize({ style = { "bold" } })
+	local title_styled = Color.colorize({ style = { "italic" } })
+	local line_length = math.max(3, math.floor(#title / 2))
+	local line = string.rep("─", line_length)
+	-- return styled("◉───[ " .. title .. " ]───◉")
+	return styled("◉" .. line .. "[ " .. title_styled(title) .. " ]" .. line .. "◉")
+end
+
 local function render_fret_numbers(fb, fret_width)
 	local frets = fb.frets
 
@@ -130,15 +139,36 @@ local function render_note(note, fb, str_no, fret_no, fret_width)
 end
 
 return function(Fretboard)
-	function Fretboard:render()
+	function Fretboard:render(opts)
+		opts = opts or {}
+		opts = {
+			title = opts.title or nil,
+			highlighted_notes = opts.highlighted_notes or true,
+			fret_numbers = opts.fret_numbers or true,
+			fret_markers = opts.fret_markers or true,
+			interval_hints = opts.interval_hints or true,
+		}
+
 		local fret_width = 7
 
+		if opts.title then
+			io.write("\n")
+			io.write(render_title(opts.title))
+			io.write("\n")
+		end
+
 		io.write("\n")
-		io.write(render_highlighted_notes(self))
-		io.write("\n")
-		io.write(render_fret_numbers(self, fret_width))
-		io.write("\n")
-		io.write("\n")
+
+		if opts.highlighted_notes then
+			io.write(render_highlighted_notes(self))
+			io.write("\n")
+		end
+
+		if opts.fret_numbers then
+			io.write(render_fret_numbers(self, fret_width))
+			io.write("\n")
+			io.write("\n")
+		end
 
 		for str_no, str in ipairs(self.notes) do
 			local open_note = str[0]
@@ -156,11 +186,15 @@ return function(Fretboard)
 			io.write("\n")
 		end
 
-		io.write("\n")
-		io.write(render_fret_markers(self, fret_width))
+		if opts.fret_markers then
+			io.write("\n")
+			io.write(render_fret_markers(self, fret_width))
+		end
 
-		io.write("\n")
-		io.write("\n")
-		io.write(render_interval_hints())
+		if opts.interval_hints then
+			io.write("\n")
+			io.write("\n")
+			io.write(render_interval_hints())
+		end
 	end
 end
