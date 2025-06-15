@@ -8,7 +8,7 @@ return function(Fretboard)
 			tuning = tuning or tunings.standard,
 			frets = frets or 12,
 			notes = {},
-			hide_disabled = false,
+			hide_disabled = true,
 		}
 
 		-- Generate State for every Note

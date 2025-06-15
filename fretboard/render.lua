@@ -44,11 +44,12 @@ local function render_open_note(open_note, fb, str_no)
 			open_note_display = fmtcolor.enabled_note(open_note_text)
 		end
 	else
-		if fb.hide_disabled then
-			open_note_display = string.rep(" ", #open_note_text)
-		else
-			open_note_display = fmtcolor.disabled_note(open_note_text)
-		end
+		-- if fb.hide_disabled then
+		-- 	open_note_display = string.rep(" ", #open_note_text)
+		-- else
+		-- 	open_note_display = fmtcolor.disabled_note(open_note_text)
+		-- end
+		open_note_display = fmtcolor.disabled_note(open_note_text)
 	end
 
 	return string.format("" .. fmt.pad_ansi_left(open_note_display, 2) .. "║")
@@ -57,7 +58,8 @@ end
 local function render_note(note, fb, str_no, fret_no)
 	local display
 	local note_text = note.label or note.name
-	local width = 8
+	local width = 6
+	-- local width = math.floor(math.max(8, ((fb.frets - fret_no) / fb.frets) * 16))
 	note_text = fmt.center(note_text, width, "─")
 
 	if note.enabled then
@@ -69,7 +71,7 @@ local function render_note(note, fb, str_no, fret_no)
 	else
 		-- BUG: IDK WHAT TO DO HERE FOR NOW
 		if fb.hide_disabled then
-			display = string.rep("-", #note_text)
+			display = string.rep("─", width)
 		else
 			display = fmtcolor.disabled_note(note_text)
 		end
