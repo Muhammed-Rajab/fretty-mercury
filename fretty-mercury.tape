@@ -3,9 +3,10 @@ Output fretty-mercury.mp4
 # Set up a 1200x600 terminal with 46px font.
 #
 Set WindowBar Colorful
+Set FontFamily "JetBrainsMono Nerd Font Propo"
 Set FontSize 26
 Set Width 2560
-Set Height 800
+Set Height 1000
 Set Margin 60
 Set MarginFill "#6B50FF"
 Set Shell zsh
@@ -21,4 +22,4 @@ Sleep 250ms
 Enter
 
 # Admire the output for a bit.
-Sleep 2s
+Sleep 9s

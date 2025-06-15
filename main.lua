@@ -1,5 +1,6 @@
 -- Modules
 local Note = require("note")
+local utils = require("utils")
 local tunings = require("tunings")
 local Fretboard = require("fretboard")
 
@@ -43,7 +44,58 @@ local function render_minor_scale(root)
 end
 
 -- clears screen
-io.write("\27[2J\27[H")
+-- io.write("\27[2J\27[H")
 
 -- render_major_scale("C")
 -- render_minor_scale("A")
+
+local function render_major_scale_animated(root, title, highlighted_intervals)
+	local fb = Fretboard:new(tunings.standard, 17)
+
+	local root_index = Note.index_of(root, false)
+
+	local major_scale_steps = { 2, 2, 1, 2, 2, 2, 1 }
+	local major_notes_roles = { "R", "M2", "M3", "4", "5", "M6", "M7" }
+
+	-- by default highlight every interval
+	highlighted_intervals = highlighted_intervals or {}
+	if next(highlighted_intervals) == nil then
+		for _, interval in ipairs(major_notes_roles) do
+			highlighted_intervals[interval] = true
+		end
+	end
+
+	-- Animation setup
+	local FPS = 1
+	local delay = 1 / FPS
+
+	-- Rendering logic
+	local pos = root_index
+	io.write("\27[2J\27[H")
+
+	for index = 1, #major_scale_steps do
+		io.write("\27[H")
+
+		local name = Note.name_at(pos, false)
+		local role = major_notes_roles[index]
+
+		pos = pos + major_scale_steps[index]
+
+		-- Only render highlighted_intervals (useful for chords)
+		if not highlighted_intervals[role] then
+			goto continue
+		end
+
+		-- Animation delay
+		fb:highlight_notes({ { name = name, role = role, enabled = true } })
+		fb:render({ title = title })
+
+		utils.sleep(delay)
+
+		::continue::
+	end
+end
+
+local root = "C"
+local highlighted_intervals = { ["R"] = true, ["M3"] = true, ["5"] = true }
+render_major_scale_animated("C", string.upper(root) .. " Major Scale", nil)
