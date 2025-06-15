@@ -44,5 +44,40 @@ local notes = {
 	{ name = "G", role = "5" },
 }
 
-fb:highlight_notes(c_maj7)
+-- MAJOR SCALE
+local Note = require("note")
+
+local major_scale_steps = { 2, 2, 1, 2, 2, 2, 1 }
+
+local c_major_notes = {
+	C = true,
+	D = true,
+	E = true,
+	F = true,
+	G = true,
+	A = true,
+	B = true,
+}
+
+local c_major_notes_roles = {
+	C = "root",
+	D = "M2",
+	E = "M3",
+	F = "4",
+	G = "5",
+	A = "M6",
+	B = "M7",
+}
+
+for str_no, str_data in ipairs(fb.notes) do
+	for fret = 0, 3 do
+		local note = str_data[fret]
+		if note and c_major_notes[note.name] then
+			local role = c_major_notes_roles[note.name]
+			fb:enable(str_no, fret, role, nil)
+		end
+	end
+end
+
+-- fb:highlight_notes(c_major_scale)
 fb:render()
