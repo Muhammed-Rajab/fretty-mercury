@@ -11,7 +11,7 @@ local fmtcolor = {
 	}),
 
 	enabled_note = Color.colorize({
-		fg = { 183, 248, 70 },
+		fg = { 255, 0, 255 },
 		style = "bold",
 	}),
 

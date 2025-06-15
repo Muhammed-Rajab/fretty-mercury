@@ -57,7 +57,8 @@ local function render_interval_hints()
 	for _, interval in ipairs(intervals) do
 		display = display .. fmtcolor.roles[interval](interval) .. " "
 	end
-	return display .. "\n"
+
+	return display .. fmtcolor.enabled_note("enabled") .. "\n"
 end
 
 local function render_highlighted_notes(fb)
