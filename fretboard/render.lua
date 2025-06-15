@@ -1,5 +1,6 @@
-local fmtcolor = require("fmtcolor")
+local fmt = require("fmt")
 local Color = require("color")
+local fmtcolor = require("fmtcolor")
 local intervals = require("fretboard.intervals")
 
 local function render_interval_hints()
@@ -32,8 +33,8 @@ local function render_highlighted_notes(fb)
 		.. "\n"
 end
 
-local function render_open_note(open_note, fb)
-	local open_note_text = open_note.label or open_note.name
+local function render_open_note(open_note, fb, str_no)
+	local open_note_text = open_note.label or (str_no == 1 and string.lower(open_note.name) or open_note.name)
 
 	local open_note_display
 	if open_note.enabled then
@@ -50,7 +51,7 @@ local function render_open_note(open_note, fb)
 		end
 	end
 
-	return string.format(" %-5s ", open_note_display .. "| ")
+	return string.format("" .. fmt.pad_ansi_left(open_note_display, 2) .. "||")
 end
 
 local function render_note(note, fb)
@@ -79,9 +80,9 @@ return function(Fretboard)
 		io.write(render_highlighted_notes(self))
 		io.write("\n")
 
-		for _, str in ipairs(self.notes) do
+		for str_no, str in ipairs(self.notes) do
 			local open_note = str[0]
-			local open_note_display = render_open_note(open_note, self)
+			local open_note_display = render_open_note(open_note, self, str_no)
 
 			io.write(open_note_display)
 
