@@ -6,7 +6,7 @@ local Fretboard = require("fretboard")
 
 -- MAJOR SCALE
 local function render_major_scale(root)
-	local fb = Fretboard:new(tunings.standard, 17)
+	local fb = Fretboard:new(tunings.all_four, 17)
 
 	local root_index = Note.index_of(root, false)
 
@@ -17,7 +17,7 @@ local function render_major_scale(root)
 	for index = 1, #major_scale_steps do
 		local name = Note.name_at(pos, false)
 		local role = major_notes_roles[index]
-		fb:highlight_notes({ { name = name, role = role, enabled = true } })
+		fb:highlight_notes({ { name = name, role = role, enabled = true, label = "" .. index } })
 		pos = pos + major_scale_steps[index]
 	end
 
@@ -25,7 +25,7 @@ local function render_major_scale(root)
 end
 
 local function render_minor_scale(root)
-	local fb = Fretboard:new(tunings.standard, 17)
+	local fb = Fretboard:new(tunings.all_four, 17)
 
 	local root_index = Note.index_of(root, false)
 
@@ -36,11 +36,16 @@ local function render_minor_scale(root)
 	for index = 1, #minor_scale_steps do
 		local name = Note.name_at(pos, false)
 		local role = minor_notes_roles[index]
-		fb:highlight_notes({ { name = name, role = role, enabled = true, label = role } })
+
+		if index ~= 2 and index ~= 6 then
+			print("not  2 or 6" .. index)
+			fb:highlight_notes({ { name = name, role = role, enabled = true, label = index .. "" } })
+		end
+
 		pos = pos + minor_scale_steps[index]
 	end
 
-	fb:render({ title = string.upper(root) .. " Minor Scale 🎸" })
+	fb:render({ title = string.upper(root) .. " Minor Pentatonic Scale 🎸" })
 end
 
 -- clears screen
@@ -102,6 +107,5 @@ local function render_major_scale_animated(root, title, highlighted_intervals)
 	end
 end
 
-local root = "C"
-local highlighted_intervals = { ["R"] = true, ["M3"] = true, ["5"] = true }
-render_major_scale_animated("C", string.upper(root) .. " Major Scale", nil)
+local root = "A"
+render_minor_scale(root)
