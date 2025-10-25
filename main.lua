@@ -2,7 +2,8 @@
 local Note = require("note")
 local utils = require("utils")
 local tunings = require("tunings")
-local Fretboard = require("fretboard")
+local Fretboard = require("fretboard.board")
+local TTYRenderer = require("fretboard.render.tty_render")
 
 -- MAJOR SCALE
 local function render_major_scale(root)
@@ -106,3 +107,11 @@ local function render_major_scale_animated(root, title, highlighted_intervals)
 		::continue::
 	end
 end
+
+local fb = Fretboard.new(tunings.standard, 12)
+
+local buffer = TTYRenderer:render(fb, {
+	title = "hello",
+})
+
+io.write(table.concat(buffer))

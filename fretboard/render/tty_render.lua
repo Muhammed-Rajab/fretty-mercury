@@ -144,15 +144,16 @@ TTYRender.__index = TTYRender
 
 ---@class TTYRenderOpts
 ---@field title string|nil
----@field highlighted_notes boolean
----@field fret_numbers boolean
----@field fret_markers boolean
----@field interval_hints boolean
+---@field highlighted_notes boolean?
+---@field fret_numbers boolean?
+---@field fret_markers boolean?
+---@field interval_hints boolean?
 ---@field fret_width integer?
 
+---@param fb Fretboard
 ---@param opts TTYRenderOpts?
 ---@return string[]
-function TTYRender:render(opts)
+function TTYRender:render(fb, opts)
 	opts = opts or {}
 	opts = {
 		title = opts.title or nil,
