@@ -1,7 +1,8 @@
-local Note = require("note")
-local tunings = require("tunings")
 local fmtcolor = require("fmtcolor")
+
+local Note = require("fretboard.note")
 local Fret = require("fretboard.fret")
+local Tunings = require("fretboard.tunings")
 
 -- [[ STATE ]]
 ---@class Fretboard
@@ -18,7 +19,7 @@ Fretboard.__index = Fretboard
 ---@return Fretboard
 function Fretboard.new(tuning, fret_count)
 	local obj = {
-		tuning = tuning or tunings.standard,
+		tuning = tuning or Tunings.standard,
 		fret_count = fret_count or 12,
 		---@type Fret[][]
 		frets = {},
