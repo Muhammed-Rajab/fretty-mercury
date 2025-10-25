@@ -3,6 +3,8 @@ local Color = require("color")
 local fmtcolor = require("fmtcolor")
 local intervals = require("fretboard.intervals")
 
+---@param title string
+---@return string
 local function render_title(title)
 	local styled = Color.colorize({ style = { "bold" } })
 	local title_styled = Color.colorize({ style = { "italic" } })
@@ -28,9 +30,10 @@ local function render_fret_numbers(fb, fret_width)
 	return display
 end
 
+---@param fb Fretboard
+---@param fret_width integer
+---@return string
 local function render_fret_markers(fb, fret_width)
-	local frets = fb.frets
-
 	local offset_x = 4
 
 	local marked_frets = {
@@ -49,8 +52,8 @@ local function render_fret_markers(fb, fret_width)
 	local display = string.rep(" ", offset_x)
 	local calculated_width = fret_width + 3 -- 1 for the fret bar and 2 for unicode
 
-	for fret = 1, frets do
-		if marked_frets[fret] then
+	for fret_index = 1, fb.fret_count do
+		if marked_frets[fret_index] then
 			local text = fmt.center("●", calculated_width, " ")
 			display = display .. text
 		else
@@ -204,14 +207,16 @@ function TTYRender:render(fb, opts)
 		table.insert(buffer, "\n")
 	end
 
+	if opts.fret_markers then
+		table.insert(buffer, "\n")
+		table.insert(buffer, render_fret_markers(fb, opts.fret_width))
+	end
+
 	return buffer
 end
 
 --
--- 	if opts.fret_markers then
--- 		io.write("\n")
--- 		io.write(render_fret_markers(self, fret_width))
--- 	end
+
 --
 -- 	if opts.interval_hints then
 -- 		io.write("\n")
