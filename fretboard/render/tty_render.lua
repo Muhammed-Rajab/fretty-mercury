@@ -12,15 +12,15 @@ local function render_title(title)
 	return styled("◉" .. line .. "[ " .. title_styled(title) .. " ]" .. line .. "◉")
 end
 
+---@param fb Fretboard
+---@param fret_width integer
 local function render_fret_numbers(fb, fret_width)
-	local frets = fb.frets
-
 	local offset_x = 4
 
 	local display = string.rep(" ", offset_x)
 
-	for fret = 1, frets do
-		local text = fmt.center(fret .. "", fret_width + 1, " ")
+	for fret_index = 1, fb.fret_count do
+		local text = fmt.center(fret_index .. "", fret_width + 1, " ")
 		text = Color.colorize({ fg = { 100, 100, 100 } })(text)
 		display = display .. text
 	end
@@ -70,14 +70,16 @@ local function render_interval_hints()
 	return display .. fmtcolor.enabled_note("enabled") .. "\n"
 end
 
+---@param fb Fretboard
+---@return string
 local function render_highlighted_notes(fb)
 	local set = {}
-	for _, str in ipairs(fb.notes) do
-		for fret = 0, fb.frets do
-			local note = str[fret]
-			if note.enabled then
-				local role_func = fmtcolor.roles[note.role]
-				set[note.name] = role_func and role_func(note.name) or note.name
+	for _, str in ipairs(fb.frets) do
+		for fret_index = 0, fb.fret_count do
+			local fret = str[fret_index]
+			if fret.enabled then
+				local role_func = fmtcolor.roles[fret.role]
+				set[fret.name] = role_func and role_func(fret.name) or fret.name
 			end
 		end
 	end
@@ -173,16 +175,22 @@ function TTYRender:render(fb, opts)
 		table.insert(buffer, "\n")
 	end
 
+	-- table.insert(buffer, )
+	table.insert(buffer, "\n")
+
+	if opts.highlighted_notes then
+		table.insert(buffer, render_highlighted_notes(fb))
+		table.insert(buffer, "\n")
+	end
+
+	if opts.fret_numbers then
+		table.insert(buffer, render_fret_numbers(fb, opts.fret_width))
+		table.insert(buffer, "\n\n")
+	end
+
 	return buffer
 end
 
--- 	io.write("\n")
---
--- 	if opts.highlighted_notes then
--- 		io.write(render_highlighted_notes(self))
--- 		io.write("\n")
--- 	end
---
 -- 	if opts.fret_numbers then
 -- 		io.write(render_fret_numbers(self, fret_width))
 -- 		io.write("\n")

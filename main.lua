@@ -109,6 +109,10 @@ local function render_major_scale_animated(root, title, highlighted_intervals)
 end
 
 local fb = Fretboard.new(tunings.standard, 12)
+fb:highlight_notes({
+	{ name = "C", role = "R" },
+	{ name = "D", role = "m2" },
+})
 
 local buffer = TTYRenderer:render(fb, {
 	title = "hello",
