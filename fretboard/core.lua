@@ -1,14 +1,16 @@
 local Note = require("note")
 local tunings = require("tunings")
 local fmtcolor = require("fmtcolor")
+local Fret = require("fretboard.fret")
 
 --[[
 -- State
 --]]
 ---@class Fretboard
 ---@field tuning string[]
----@field frets integer
+---@field fret_count integer
 ---@field hide_disabled boolean
+---@field frets Fret[][]
 local Fretboard = {}
 Fretboard.__index = Fretboard
 
@@ -16,28 +18,24 @@ Fretboard.__index = Fretboard
 --Constructor
 --]]
 ---@param tuning string[]?
----@param frets integer?
+---@param fret_count integer?
 ---@return Fretboard
-function Fretboard.new(tuning, frets)
+function Fretboard.new(tuning, fret_count)
 	local obj = {
 		tuning = tuning or tunings.standard,
-		frets = frets or 12,
-		notes = {},
+		fret_count = fret_count or 12,
+		---@type Fret[][]
+		frets = {},
 		hide_disabled = true,
 	}
 
 	-- Generate State for every Note
 	for string_index, start_note in ipairs(obj.tuning) do
 		local start_index = Note.index_of(start_note)
-		obj.notes[string_index] = {}
-		for fret = 0, obj.frets do
+		obj.frets[string_index] = {}
+		for fret = 0, obj.fret_count do
 			local note_name = Note.name_at(start_index + fret, false)
-			obj.notes[string_index][fret] = {
-				name = note_name,
-				enabled = false,
-				role = nil,
-				label = nil,
-			}
+			obj.frets[string_index][fret] = Fret.new(note_name)
 		end
 	end
 
@@ -53,7 +51,7 @@ end
 ---@param fret_index integer
 ---@return boolean
 function Fretboard:is_valid_fret_index(fret_index)
-	return fret_index >= 0 and fret_index <= self.frets
+	return fret_index >= 0 and fret_index <= self.fret_count
 end
 
 ---@param string_index integer
@@ -76,7 +74,7 @@ end
 function Fretboard:assert_is_valid_fret_index(fret_index)
 	assert(
 		self:is_valid_fret_index(fret_index),
-		fmtcolor.error(string.format("warning: must be 0 <= fret <= %d (got %d)", self.frets, fret_index))
+		fmtcolor.error(string.format("warning: must be 0 <= fret <= %d (got %d)", self.fret_count, fret_index))
 	)
 end
 
@@ -92,7 +90,7 @@ function Fretboard:toggle(string_index, fret)
 	self:assert_is_valid_fret_index(fret)
 
 	-- toggle note
-	self.notes[string_index][fret].enabled = not self.notes[string_index][fret].enabled
+	self.frets[string_index][fret].enabled = not self.frets[string_index][fret].enabled
 end
 
 function Fretboard:enable(string_index, fret, role, label)
@@ -102,9 +100,9 @@ function Fretboard:enable(string_index, fret, role, label)
 	-- validate fret index
 	self:assert_is_valid_fret_index(fret)
 
-	self.notes[string_index][fret].enabled = true
-	self.notes[string_index][fret].role = role
-	self.notes[string_index][fret].label = label
+	self.frets[string_index][fret].enabled = true
+	self.frets[string_index][fret].role = role
+	self.frets[string_index][fret].label = label
 end
 
 function Fretboard:disable(string_index, fret)
@@ -114,16 +112,16 @@ function Fretboard:disable(string_index, fret)
 	-- validate fret index
 	self:assert_is_valid_fret_index(fret)
 
-	self.notes[string_index][fret].enabled = false
-	self.notes[string_index][fret].role = nil
-	self.notes[string_index][fret].label = nil
+	self.frets[string_index][fret].enabled = false
+	self.frets[string_index][fret].role = nil
+	self.frets[string_index][fret].label = nil
 end
 
 function Fretboard:highlight_notes(notes)
 	-- every string
-	for _, str in ipairs(self.notes) do
+	for _, str in ipairs(self.frets) do
 		-- every fret
-		for fret = 0, self.frets do
+		for fret = 0, self.fret_count do
 			local note = str[fret] -- NOTE: it can also be an OPEN note
 			-- every chord note
 			for _, n_note in ipairs(notes) do
@@ -139,8 +137,8 @@ function Fretboard:highlight_notes(notes)
 end
 
 function Fretboard:clear()
-	for _, string_notes in ipairs(self.notes) do
-		for fret = 0, self.frets do
+	for _, string_notes in ipairs(self.frets) do
+		for fret = 0, self.fret_count do
 			string_notes[fret].enabled = false
 			string_notes[fret].role = nil
 			string_notes[fret].label = nil
