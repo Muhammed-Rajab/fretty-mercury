@@ -162,4 +162,11 @@ function Fretboard:clear()
 	end
 end
 
+--- supports Fretboard(...) syntax
+setmetatable(Fretboard, {
+	__call = function(_, ...)
+		return Fretboard.new(...)
+	end,
+})
+
 return Fretboard
