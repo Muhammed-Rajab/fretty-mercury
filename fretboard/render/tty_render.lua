@@ -64,6 +64,7 @@ local function render_fret_markers(fb, fret_width)
 	return display
 end
 
+---@return string
 local function render_interval_hints()
 	local display = Color.colorize({ style = { "bold", "underline" } })("Hints") .. ": "
 	for _, interval in ipairs(intervals) do
@@ -98,6 +99,10 @@ local function render_highlighted_notes(fb)
 		.. "\n"
 end
 
+---@param open_note Fret
+---@param fb Fretboard
+---@param str_no integer
+---@return string
 local function render_open_note(open_note, fb, str_no)
 	local open_note_text = open_note.label or (str_no == 1 and string.lower(open_note.name) or open_note.name)
 
@@ -120,10 +125,15 @@ local function render_open_note(open_note, fb, str_no)
 	return string.format(" " .. fmt.pad_ansi_left(open_note_display, 2) .. "║")
 end
 
+---@param note Fret
+---@param fb Fretboard
+---@param str_no integer
+---@param fret_no integer
+---@param fret_width integer
+---@return string
 local function render_note(note, fb, str_no, fret_no, fret_width)
 	local display
 	local note_text = note.label or note.name
-	-- local width = math.floor(math.max(8, ((fb.frets - fret_no) / fb.frets) * 16))
 	note_text = fmt.center(note_text, fret_width, "─")
 
 	if note.enabled then
@@ -143,11 +153,7 @@ local function render_note(note, fb, str_no, fret_no, fret_width)
 	return "" .. display .. "┃"
 end
 
----@class TTYRender
-local TTYRender = {}
-TTYRender.__index = TTYRender
-
----@class TTYRenderOpts
+---@class TTYRendererOpts
 ---@field title string|nil
 ---@field highlighted_notes boolean?
 ---@field fret_numbers boolean?
@@ -155,42 +161,54 @@ TTYRender.__index = TTYRender
 ---@field interval_hints boolean?
 ---@field fret_width integer?
 
+---@class TTYRenderer
+local TTYRenderer = {}
+TTYRenderer.__index = TTYRenderer
+
+---@return TTYRenderer
+function TTYRenderer.new()
+	return setmetatable({}, TTYRenderer)
+end
+
 ---@param fb Fretboard
----@param opts TTYRenderOpts?
----@return string[]
-function TTYRender:render(fb, opts)
+---@param opts TTYRendererOpts?
+---@return string
+function TTYRenderer:render(fb, opts)
 	opts = opts or {}
 	opts = {
-		title = opts.title or nil,
-		highlighted_notes = opts.highlighted_notes or true,
-		fret_numbers = opts.fret_numbers or true,
-		fret_markers = opts.fret_markers or true,
-		interval_hints = opts.interval_hints or true,
+		title = opts.title,
+		highlighted_notes = opts.highlighted_notes ~= false,
+		fret_numbers = opts.fret_numbers ~= false,
+		fret_markers = opts.fret_markers ~= false,
+		interval_hints = opts.interval_hints ~= false,
 		fret_width = opts.fret_width or 7,
 	}
 
 	-- buffer to write to instead of terminal
 	local buffer = {}
 
+	-- title
 	if opts.title then
 		table.insert(buffer, "\n")
 		table.insert(buffer, render_title(opts.title))
 		table.insert(buffer, "\n")
 	end
 
-	-- table.insert(buffer, )
 	table.insert(buffer, "\n")
 
+	-- highlighted notes
 	if opts.highlighted_notes then
 		table.insert(buffer, render_highlighted_notes(fb))
 		table.insert(buffer, "\n")
 	end
 
+	-- fret numbers
 	if opts.fret_numbers then
 		table.insert(buffer, render_fret_numbers(fb, opts.fret_width))
 		table.insert(buffer, "\n\n")
 	end
 
+	-- notes
 	for str_no, str in ipairs(fb.frets) do
 		local open_note = str[0]
 		local open_note_display = render_open_note(open_note, fb, str_no)
@@ -200,29 +218,25 @@ function TTYRender:render(fb, opts)
 		for fret_index = 1, fb.fret_count do
 			local note = str[fret_index]
 			local display = render_note(note, fb, str_no, fret_index, opts.fret_width)
-
 			table.insert(buffer, display)
 		end
 
 		table.insert(buffer, "\n")
 	end
 
+	-- fret markers
 	if opts.fret_markers then
 		table.insert(buffer, "\n")
 		table.insert(buffer, render_fret_markers(fb, opts.fret_width))
 	end
 
-	return buffer
+	-- interval hints
+	if opts.interval_hints then
+		table.insert(buffer, "\n\n")
+		table.insert(buffer, render_interval_hints())
+	end
+
+	return table.concat(buffer)
 end
 
---
-
---
--- 	if opts.interval_hints then
--- 		io.write("\n")
--- 		io.write("\n")
--- 		io.write(render_interval_hints())
--- 	end
--- end
-
-return TTYRender
+return TTYRenderer

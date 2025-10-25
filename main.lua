@@ -56,7 +56,7 @@ end
 -- render_minor_scale("A")
 
 local function render_major_scale_animated(root, title, highlighted_intervals)
-	local fb = Fretboard:new(tunings.standard, 17)
+	local fb = Fretboard.new(tunings.standard, 17)
 
 	local root_index = Note.index_of(root, false)
 
@@ -76,6 +76,8 @@ local function render_major_scale_animated(root, title, highlighted_intervals)
 	local delay = 1 / FPS
 
 	-- Rendering logic
+	local renderer = TTYRenderer.new()
+
 	local pos = root_index
 	io.write("\27[2J\27[H")
 
@@ -83,7 +85,7 @@ local function render_major_scale_animated(root, title, highlighted_intervals)
 		io.write("\27[H")
 
 		-- Render
-		fb:render({ title = title })
+		io.write(renderer:render(fb, { title = "hello" }))
 
 		if index == #major_scale_steps + 1 then
 			break
@@ -108,14 +110,4 @@ local function render_major_scale_animated(root, title, highlighted_intervals)
 	end
 end
 
-local fb = Fretboard.new(tunings.standard, 12)
-fb:highlight_notes({
-	{ name = "C", role = "R" },
-	{ name = "D", role = "m2" },
-})
-
-local buffer = TTYRenderer:render(fb, {
-	title = "hello",
-})
-
-io.write(table.concat(buffer))
+render_major_scale_animated("A", "A Major Animated")
