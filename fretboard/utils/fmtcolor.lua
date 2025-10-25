@@ -1,4 +1,4 @@
-local Color = require("color")
+local Color = require("fretboard.utils.color")
 
 local fmtcolor = {
 	error = Color.colorize({
@@ -31,21 +31,6 @@ local fmtcolor = {
 		M6 = Color.colorize({ fg = { 255, 105, 180 }, style = "bold" }), -- Hot Pink
 		m7 = Color.colorize({ fg = { 173, 255, 47 }, style = "bold" }), -- Green-Yellow
 		M7 = Color.colorize({ fg = { 255, 215, 0 }, style = "bold" }), -- Gold
-
-		-- Extensions
-		["9"] = Color.colorize({ fg = { 0, 191, 255 }, style = "bold" }), -- Deep Sky Blue
-		["b9"] = Color.colorize({ fg = { 199, 21, 133 }, style = "bold" }), -- Medium Violet Red
-		["#9"] = Color.colorize({ fg = { 255, 20, 147 }, style = "bold" }), -- Deep Pink
-		["11"] = Color.colorize({ fg = { 106, 90, 205 }, style = "bold" }), -- Slate Blue
-		["#11"] = Color.colorize({ fg = { 147, 112, 219 }, style = "bold" }), -- Medium Purple
-		["13"] = Color.colorize({ fg = { 255, 160, 122 }, style = "bold" }), -- Light Salmon
-
-		-- Modal / Suspended / Add / Omitted
-		add9 = Color.colorize({ fg = { 60, 179, 113 }, style = "bold" }), -- Medium Sea Green
-		sus2 = Color.colorize({ fg = { 244, 164, 96 }, style = "bold" }), -- Sandy Brown
-		sus4 = Color.colorize({ fg = { 218, 112, 214 }, style = "bold" }), -- Orchid
-		no3 = Color.colorize({ fg = { 169, 169, 169 }, style = "bold" }), -- Dark Gray
-		no5 = Color.colorize({ fg = { 112, 128, 144 }, style = "bold" }), -- Slate Gray
 	},
 }
 

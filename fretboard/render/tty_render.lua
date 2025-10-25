@@ -1,6 +1,6 @@
-local fmt = require("fmt")
-local Color = require("color")
-local fmtcolor = require("fmtcolor")
+local fmt = require("fretboard.utils.fmt")
+local Color = require("fretboard.utils.color")
+local fmtcolor = require("fretboard.utils.fmtcolor")
 local intervals = require("fretboard.intervals")
 
 ---@param title string

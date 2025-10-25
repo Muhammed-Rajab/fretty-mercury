@@ -1,4 +1,4 @@
-local fmtcolor = require("fmtcolor")
+local fmtcolor = require("fretboard.utils.fmtcolor")
 
 local Note = require("fretboard.note")
 local Fret = require("fretboard.fret")
