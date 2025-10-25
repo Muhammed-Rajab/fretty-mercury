@@ -3,9 +3,7 @@ local tunings = require("tunings")
 local fmtcolor = require("fmtcolor")
 local Fret = require("fretboard.fret")
 
---[[
--- State
---]]
+-- [[ STATE ]]
 ---@class Fretboard
 ---@field tuning string[]
 ---@field fret_count integer
@@ -14,9 +12,7 @@ local Fret = require("fretboard.fret")
 local Fretboard = {}
 Fretboard.__index = Fretboard
 
---[[
---Constructor
---]]
+--[[ CONSTRUCTOR ]]
 ---@param tuning string[]?
 ---@param fret_count integer?
 ---@return Fretboard
