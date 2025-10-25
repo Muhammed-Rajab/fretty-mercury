@@ -3,7 +3,7 @@ local Note = require("fretboard.note")
 local utils = require("utils")
 local tunings = require("fretboard.tunings")
 local Fretboard = require("fretboard.board")
-local TTYRenderer = require("fretboard.render.tty_render")
+local TTYRenderer = require("fretboard.render.tty_renderer")
 
 -- MAJOR SCALE
 local function render_major_scale(root)
