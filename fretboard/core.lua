@@ -29,7 +29,7 @@ function Fretboard.new(tuning, fret_count)
 		hide_disabled = true,
 	}
 
-	-- Generate State for every Note
+	-- Create Fret for every fret in each string
 	for string_index, start_note in ipairs(obj.tuning) do
 		local start_index = Note.index_of(start_note)
 		obj.frets[string_index] = {}
@@ -57,7 +57,7 @@ end
 ---@param string_index integer
 ---@return boolean
 function Fretboard:is_valid_string_index(string_index)
-	return string_index >= 1 and string_index <= 6
+	return string_index >= 1 and string_index <= #self.tuning
 end
 
 --  [[ VALIDATOR ASSERTORS ]]
@@ -90,9 +90,13 @@ function Fretboard:toggle(string_index, fret)
 	self:assert_is_valid_fret_index(fret)
 
 	-- toggle note
-	self.frets[string_index][fret].enabled = not self.frets[string_index][fret].enabled
+	self.frets[string_index][fret]:toggle()
 end
 
+---@param string_index integer
+---@param fret integer
+---@param role string|nil
+---@param label string|nil
 function Fretboard:enable(string_index, fret, role, label)
 	-- validate string index
 	self:assert_is_valid_string_index(string_index)
@@ -100,35 +104,52 @@ function Fretboard:enable(string_index, fret, role, label)
 	-- validate fret index
 	self:assert_is_valid_fret_index(fret)
 
-	self.frets[string_index][fret].enabled = true
-	self.frets[string_index][fret].role = role
-	self.frets[string_index][fret].label = label
+	self.frets[string_index][fret]:enable(role, label)
 end
 
-function Fretboard:disable(string_index, fret)
+---@param string_index integer
+---@param fret integer
+---@param clear_metadata boolean?
+function Fretboard:disable(string_index, fret, clear_metadata)
 	-- validate string index
 	self:assert_is_valid_string_index(string_index)
 
 	-- validate fret index
 	self:assert_is_valid_fret_index(fret)
 
-	self.frets[string_index][fret].enabled = false
-	self.frets[string_index][fret].role = nil
-	self.frets[string_index][fret].label = nil
+	self.frets[string_index][fret]:disable(clear_metadata)
 end
 
+---@param notes {name: string, role: string?, label: string?}[]
 function Fretboard:highlight_notes(notes)
 	-- every string
 	for _, str in ipairs(self.frets) do
-		-- every fret
-		for fret = 0, self.fret_count do
-			local note = str[fret] -- NOTE: it can also be an OPEN note
+		-- every fret (starts at 0, cause open strings)
+		for fret_index = 0, self.fret_count do
+			local fret = str[fret_index]
 			-- every chord note
 			for _, n_note in ipairs(notes) do
-				if n_note.name == note.name then
-					note.enabled = true
-					note.role = n_note.role
-					note.label = n_note.label
+				if n_note.name == fret.name then
+					fret:enable(n_note.role, n_note.label)
+					break
+				end
+			end
+		end
+	end
+end
+
+---@param notes {name: string, role: string?, label: string?}[]
+---@param clear_metadata boolean
+function Fretboard:unhighlight_notes(notes, clear_metadata)
+	-- every string
+	for _, str in ipairs(self.frets) do
+		-- every fret (starts at 0, cause open strings)
+		for fret_index = 0, self.fret_count do
+			local fret = str[fret_index]
+			-- every chord note
+			for _, n_note in ipairs(notes) do
+				if n_note.name == fret.name then
+					fret:disable(clear_metadata)
 					break
 				end
 			end
@@ -139,9 +160,7 @@ end
 function Fretboard:clear()
 	for _, string_notes in ipairs(self.frets) do
 		for fret = 0, self.fret_count do
-			string_notes[fret].enabled = false
-			string_notes[fret].role = nil
-			string_notes[fret].label = nil
+			string_notes[fret]:disable(true)
 		end
 	end
 end

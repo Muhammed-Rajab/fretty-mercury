@@ -138,63 +138,82 @@ local function render_note(note, fb, str_no, fret_no, fret_width)
 	return "" .. display .. "┃"
 end
 
-return function(Fretboard)
-	function Fretboard:render(opts)
-		opts = opts or {}
-		opts = {
-			title = opts.title or nil,
-			highlighted_notes = opts.highlighted_notes or true,
-			fret_numbers = opts.fret_numbers or true,
-			fret_markers = opts.fret_markers or true,
-			interval_hints = opts.interval_hints or true,
-		}
+---@class TTYRender
+local TTYRender = {}
+TTYRender.__index = TTYRender
 
-		local fret_width = 7
+---@class TTYRenderOpts
+---@field title string|nil
+---@field highlighted_notes boolean
+---@field fret_numbers boolean
+---@field fret_markers boolean
+---@field interval_hints boolean
+---@field fret_width integer?
 
-		if opts.title then
-			io.write("\n")
-			io.write(render_title(opts.title))
-			io.write("\n")
-		end
+---@param opts TTYRenderOpts?
+---@return string[]
+function TTYRender:render(opts)
+	opts = opts or {}
+	opts = {
+		title = opts.title or nil,
+		highlighted_notes = opts.highlighted_notes or true,
+		fret_numbers = opts.fret_numbers or true,
+		fret_markers = opts.fret_markers or true,
+		interval_hints = opts.interval_hints or true,
+		fret_width = opts.fret_width or 7,
+	}
 
-		io.write("\n")
+	-- buffer to write to instead of terminal
+	local buffer = {}
 
-		if opts.highlighted_notes then
-			io.write(render_highlighted_notes(self))
-			io.write("\n")
-		end
-
-		if opts.fret_numbers then
-			io.write(render_fret_numbers(self, fret_width))
-			io.write("\n")
-			io.write("\n")
-		end
-
-		for str_no, str in ipairs(self.notes) do
-			local open_note = str[0]
-			local open_note_display = render_open_note(open_note, self, str_no)
-
-			io.write(open_note_display)
-
-			for fret = 1, self.frets do
-				local note = str[fret]
-				local display = render_note(note, self, str_no, fret, fret_width)
-
-				io.write(display)
-			end
-
-			io.write("\n")
-		end
-
-		if opts.fret_markers then
-			io.write("\n")
-			io.write(render_fret_markers(self, fret_width))
-		end
-
-		if opts.interval_hints then
-			io.write("\n")
-			io.write("\n")
-			io.write(render_interval_hints())
-		end
+	if opts.title then
+		table.insert(buffer, "\n")
+		table.insert(buffer, render_title(opts.title))
+		table.insert(buffer, "\n")
 	end
+
+	return buffer
 end
+
+-- 	io.write("\n")
+--
+-- 	if opts.highlighted_notes then
+-- 		io.write(render_highlighted_notes(self))
+-- 		io.write("\n")
+-- 	end
+--
+-- 	if opts.fret_numbers then
+-- 		io.write(render_fret_numbers(self, fret_width))
+-- 		io.write("\n")
+-- 		io.write("\n")
+-- 	end
+--
+-- 	for str_no, str in ipairs(self.notes) do
+-- 		local open_note = str[0]
+-- 		local open_note_display = render_open_note(open_note, self, str_no)
+--
+-- 		io.write(open_note_display)
+--
+-- 		for fret = 1, self.frets do
+-- 			local note = str[fret]
+-- 			local display = render_note(note, self, str_no, fret, fret_width)
+--
+-- 			io.write(display)
+-- 		end
+--
+-- 		io.write("\n")
+-- 	end
+--
+-- 	if opts.fret_markers then
+-- 		io.write("\n")
+-- 		io.write(render_fret_markers(self, fret_width))
+-- 	end
+--
+-- 	if opts.interval_hints then
+-- 		io.write("\n")
+-- 		io.write("\n")
+-- 		io.write(render_interval_hints())
+-- 	end
+-- end
+
+return TTYRender

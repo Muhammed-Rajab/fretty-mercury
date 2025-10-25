@@ -106,6 +106,3 @@ local function render_major_scale_animated(root, title, highlighted_intervals)
 		::continue::
 	end
 end
-
-local root = "A"
-render_minor_scale(root)
