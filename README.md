@@ -186,6 +186,81 @@ Terminal-based renderer for fretboard visualization.
 
 ## Examples
 
+```lua
+-- Modules: Importing required modules for notes, tunings, fretboard, and rendering
+local Note = require("fretboard.note")          -- Provides note-related utilities
+local tunings = require("fretboard.tunings")    -- Provides standard and alternate tunings
+local Fretboard = require("fretboard.board")    -- Represents the guitar fretboard
+local TTYRenderer = require("fretboard.render.tty_renderer")  -- Renders fretboard in terminal
+
+-- FUNCTION: Render a major scale starting from a given root note
+local function render_major_scale(root)
+    -- Create a new fretboard with standard tuning and 17 frets
+	local fb = Fretboard.new(tunings.standard, 17)
+
+    -- Get the index of the root note
+	local root_index = Note.index_of(root, false)
+
+    -- Intervals (in semitones) for a major scale: W-W-H-W-W-W-H
+	local major_scale_steps = { 2, 2, 1, 2, 2, 2, 1 }
+    -- Labels for scale degrees
+	local major_notes_roles = { "R", "M2", "M3", "4", "5", "M6", "M7" }
+
+	local pos = root_index
+	for index = 1, #major_scale_steps do
+		local name = Note.name_at(pos, false)     -- Get the note name at current position
+		local role = major_notes_roles[index]    -- Get scale degree/role
+
+        -- Highlight this note on the fretboard with its scale degree
+		fb:highlight_notes({ { name = name, role = role, enabled = true, label = "" .. index } })
+
+        -- Move to the next note in the scale using the step interval
+		pos = pos + major_scale_steps[index]
+	end
+
+    -- Render the fretboard in terminal with a title
+	io.write(TTYRenderer:render(fb, {
+		title = string.upper(root) .. " Major Scale 🎸",
+	}))
+end
+
+-- FUNCTION: Render a minor pentatonic scale starting from a given root note
+local function render_minor_pentatonic_scale(root)
+    -- Create a new fretboard with "all_four" tuning and 17 frets
+	local fb = Fretboard.new(tunings.all_four, 17)
+
+	local root_index = Note.index_of(root, false)
+
+    -- Intervals for minor pentatonic scale (simplified for display)
+	local minor_scale_steps = { 2, 1, 2, 2, 1, 2, 2 }
+    -- Scale degrees/roles
+	local minor_notes_roles = { "R", "M2", "m3", "4", "5", "m6", "m7" }
+	local pos = root_index
+
+	for index = 1, #minor_scale_steps do
+		local name = Note.name_at(pos, false)
+		local role = minor_notes_roles[index]
+
+        -- Skip certain notes (M2 and m6) to highlight pentatonic pattern
+		if index ~= 2 and index ~= 6 then
+			fb:highlight_notes({ { name = name, role = role, enabled = true, label = index .. "" } })
+		end
+
+        -- Move to the next note in the scale
+		pos = pos + minor_scale_steps[index]
+	end
+
+    -- Render the fretboard in terminal with a title
+	io.write(TTYRenderer:render(fb, {
+		title = string.upper(root) .. " Minor Scale 🎸",
+	}))
+end
+
+-- EXAMPLES: Render scales starting from the note "A"
+render_major_scale("A")
+render_minor_pentatonic_scale("A")
+```
+
 
 ## Customization
 

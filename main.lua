@@ -6,7 +6,7 @@ local TTYRenderer = require("fretboard.render.tty_renderer")
 
 -- MAJOR SCALE
 local function render_major_scale(root)
-	local fb = Fretboard.new(tunings.all_four, 17)
+	local fb = Fretboard.new(tunings.standard, 17)
 
 	local root_index = Note.index_of(root, false)
 
