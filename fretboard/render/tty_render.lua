@@ -188,30 +188,25 @@ function TTYRender:render(fb, opts)
 		table.insert(buffer, "\n\n")
 	end
 
+	for str_no, str in ipairs(fb.frets) do
+		local open_note = str[0]
+		local open_note_display = render_open_note(open_note, fb, str_no)
+
+		table.insert(buffer, open_note_display)
+
+		for fret_index = 1, fb.fret_count do
+			local note = str[fret_index]
+			local display = render_note(note, fb, str_no, fret_index, opts.fret_width)
+
+			table.insert(buffer, display)
+		end
+
+		table.insert(buffer, "\n")
+	end
+
 	return buffer
 end
 
--- 	if opts.fret_numbers then
--- 		io.write(render_fret_numbers(self, fret_width))
--- 		io.write("\n")
--- 		io.write("\n")
--- 	end
---
--- 	for str_no, str in ipairs(self.notes) do
--- 		local open_note = str[0]
--- 		local open_note_display = render_open_note(open_note, self, str_no)
---
--- 		io.write(open_note_display)
---
--- 		for fret = 1, self.frets do
--- 			local note = str[fret]
--- 			local display = render_note(note, self, str_no, fret, fret_width)
---
--- 			io.write(display)
--- 		end
---
--- 		io.write("\n")
--- 	end
 --
 -- 	if opts.fret_markers then
 -- 		io.write("\n")
