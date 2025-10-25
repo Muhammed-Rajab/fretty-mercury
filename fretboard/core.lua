@@ -48,6 +48,8 @@ end
 
 --[[ HELPER METHODS ]]
 
+--  [[ VALIDATORS ]]
+
 ---@param fret_index integer
 ---@return boolean
 function Fretboard:is_valid_fret_index(fret_index)
@@ -60,37 +62,45 @@ function Fretboard:is_valid_string_index(string_index)
 	return string_index >= 1 and string_index <= 6
 end
 
+--  [[ VALIDATOR ASSERTORS ]]
+
+---@param string_index integer
+function Fretboard:assert_is_valid_string_index(string_index)
+	assert(
+		self:is_valid_string_index(string_index),
+		fmtcolor.error(string.format("warning: must be 1 <= string index <= 6 (got %s)", string_index))
+	)
+end
+
+---@param fret_index integer
+function Fretboard:assert_is_valid_fret_index(fret_index)
+	assert(
+		self:is_valid_fret_index(fret_index),
+		fmtcolor.error(string.format("warning: must be 0 <= fret <= %d (got %d)", self.frets, fret_index))
+	)
+end
+
 --[[ MAIN METHODS ]]
 
 ---@param string_index integer
 ---@param fret integer
 function Fretboard:toggle(string_index, fret)
 	-- validate string index
-	if not self:is_valid_string_index(string_index) then
-		print(fmtcolor.error(string.format("warning: must be 1 <= string index <= 6 (got %s)", string_index)))
-		return
-	end
+	self:assert_is_valid_string_index(string_index)
 
 	-- validate fret index
-	if not self:is_valid_fret_index(fret) then
-		print(fmtcolor.error(string.format("warning: must be 0 <= fret <= %d (got %d)", self.frets, fret)))
-		return
-	end
+	self:assert_is_valid_fret_index(fret)
 
 	-- toggle note
 	self.notes[string_index][fret].enabled = not self.notes[string_index][fret].enabled
 end
 
 function Fretboard:enable(string_index, fret, role, label)
-	if string_index < 1 or string_index > 6 then
-		print(fmtcolor.error(string.format("warning: must be 1 <= string index <= 6 (got %s)", string_index)))
-		return
-	end
+	-- validate string index
+	self:assert_is_valid_string_index(string_index)
 
-	if fret < 0 or fret > self.frets then
-		print(fmtcolor.error(string.format("warning: must be 0 <= fret <= %d (got %d)", self.frets, fret)))
-		return
-	end
+	-- validate fret index
+	self:assert_is_valid_fret_index(fret)
 
 	self.notes[string_index][fret].enabled = true
 	self.notes[string_index][fret].role = role
@@ -98,15 +108,11 @@ function Fretboard:enable(string_index, fret, role, label)
 end
 
 function Fretboard:disable(string_index, fret)
-	if string_index < 1 or string_index > 6 then
-		print(fmtcolor.error(string.format("warning: must be 1 <= string index <= 6 (got %s)", string_index)))
-		return
-	end
+	-- validate string index
+	self:assert_is_valid_string_index(string_index)
 
-	if fret < 0 or fret > self.frets then
-		print(fmtcolor.error(string.format("warning: must be 0 <= fret <= %d (got %d)", self.frets, fret)))
-		return
-	end
+	-- validate fret index
+	self:assert_is_valid_fret_index(fret)
 
 	self.notes[string_index][fret].enabled = false
 	self.notes[string_index][fret].role = nil
