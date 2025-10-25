@@ -1,3 +1,4 @@
+---@type string[]
 local intervals = {
 	"R",
 	"m2",
